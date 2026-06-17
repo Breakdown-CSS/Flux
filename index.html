@@ -4,40 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Social</title>
+    <title>Flux</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+    <div id="pantallaCarga">
+
+    <img
+        src="logocolor.png"
+        id="logoCarga"
+        alt="Flux">
+
+</div>
+
 <header>
-    <h1>Mini Social</h1>
+
+    <img
+        src="logopc.png"
+        id="logoFlux"
+        alt="Flux">
+
 </header>
 
 <main>
 
-    <section class="perfil">
+    <section id="registro">
 
-        <h2 id="nombrePerfil">Usuario</h2>
+    <h2>Bienvenido a Flux</h2>
+
+    <img
+        id="previewRegistro"
+        src="https://via.placeholder.com/120"
+        alt="Vista previa">
+
+    <label
+        for="fotoRegistro"
+        class="btn-imagen">
+
+        Elegir foto de perfil
+
+    </label>
+
+    <input
+        type="file"
+        id="fotoRegistro"
+        accept="image/*">
+
+    <input
+        type="text"
+        id="nombreRegistro"
+        placeholder="Nombre de usuario">
 
         <input
-            type="text"
-            id="nuevoNombre"
-            placeholder="Escribe tu nombre">
+    type="text"
+    id="usuarioRegistro"
+    placeholder="@usuario">
 
-        <button id="guardarNombre">
-            Guardar nombre
-        </button>
+    <button id="btnRegistro">
+        Registrarse
+    </button>
+
+</section>
+
+<div id="app">
+
+<div class="contenedor-principal">
+
+    <section class="perfil">
+
+  <h2 id="nombrePerfil">Usuario</h2>
+
+  <p id="usuarioPerfil">
+    @usuario
+</p>
+
+<p id="biografiaPerfil">
+    Sin biografía.
+</p>
+
+<p id="contadorPosts">
+    Publicaciones: 0
+</p>
+
+<img
+    id="avatar"
+    src="https://via.placeholder.com/120"
+    alt="Foto de perfil">
+
+<input
+    type="file"
+    id="fotoPerfil"
+    accept="image/*">
+
+<textarea
+    id="biografiaInput"
+    placeholder="Escribe una biografía">
+</textarea>
+
+<button id="guardarBio">
+    Guardar biografía
+</button>
+
+<button id="modoOscuro">
+    🌙 Modo oscuro
+</button>
 
     </section>
 
     <section class="crear-post">
 
-        <textarea
-            id="contenido"
-            placeholder="¿Qué estás pensando?">
-        </textarea>
+<textarea id="contenido" 
+maxlength="280" 
+placeholder="¿Qué estás pensando?">
+</textarea>
 
         <button id="publicar">
             Publicar
@@ -45,9 +127,13 @@
 
     </section>
 
-    <section id="feed">
+<section id="feed">
 
-    </section>
+</section>
+
+</div>
+
+</div>
 
 </main>
 
