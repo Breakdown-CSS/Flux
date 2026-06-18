@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flux</title>
+    
+    <link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -35,10 +45,10 @@
 
     <h2>Bienvenido a Flux</h2>
 
-    <img
-        id="previewRegistro"
-        src="https://via.placeholder.com/120"
-        alt="Vista previa">
+<img
+    id="previewRegistro"
+    src="defaultprofile.png"
+    alt="Vista previa">
 
     <label
         for="fotoRegistro"
@@ -91,7 +101,7 @@
 
 <img
     id="avatar"
-    src="https://via.placeholder.com/120"
+    src="defaultprofile"
     alt="Foto de perfil">
 
 <input
@@ -114,22 +124,26 @@
 
     </section>
 
-    <section class="crear-post">
+<div class="zona-feed">
 
-<textarea id="contenido" 
-maxlength="280" 
+<section class="crear-post">
+
+<textarea id="contenido"
+maxlength="280"
 placeholder="¿Qué estás pensando?">
 </textarea>
 
-        <button id="publicar">
-            Publicar
-        </button>
+<button id="publicar">
+    Publicar
+</button>
 
-    </section>
+</section>
 
 <section id="feed">
 
 </section>
+
+</div>
 
 </div>
 

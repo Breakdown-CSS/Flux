@@ -246,7 +246,10 @@ if (textoEditado) {
 
         contenido.value = "";
 
-        return;
+contadorTexto.textContent =
+"0 / 280";
+
+return;
     }
 
     if(contenido.value.trim() === ""){
@@ -321,7 +324,7 @@ obtenerTiempoRelativo(fecha);
         </div>
     `;
 
-feed.appendChild(post);
+feed.prepend(post);
 
 cantidadPosts++;
 
@@ -480,6 +483,9 @@ comentario.innerHTML = `
         listaComentarios.appendChild(comentario);
 
         comentarioInput.value = "";
+        
+        contadorComentario.textContent =
+"0 / 150";
 
     });
 
