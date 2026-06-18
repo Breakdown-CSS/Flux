@@ -66,6 +66,25 @@ biografiaInput.parentNode.insertBefore(
     guardarBio
 );
 
+/*
+const contadorBio =
+document.createElement("div");
+
+contadorBio.style.fontSize =
+"12px";
+
+contadorBio.style.color =
+"#666";
+
+contadorBio.textContent =
+"0 / 160";
+
+biografiaInput.parentNode.insertBefore(
+    contadorBio,
+    guardarBio
+);
+*/
+
 const pantallaCarga =
 document.getElementById("pantallaCarga");
 
