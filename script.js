@@ -214,9 +214,12 @@ guardarBio.addEventListener("click", () => {
     biografiaInput.value.trim();
 
     biografiaInput.value = "";
-    
-    contadorBio.textContent =
+
+contadorBio.textContent =
 "0 / 160";
+
+contadorBio.style.color =
+"#666";
 
 });
 
@@ -287,13 +290,15 @@ if (textoEditado) {
 
         publicar.textContent = "Publicar";
 
-        contenido.value = "";
+contenido.value = "";
 
 contadorTexto.textContent =
 "0 / 280";
 
+contadorTexto.style.color =
+"#666";
+
 return;
-    }
 
     if(contenido.value.trim() === ""){
         return;
@@ -375,6 +380,12 @@ contadorPosts.textContent =
 `Publicaciones: ${cantidadPosts}`;
 
 contenido.value = "";
+
+contadorTexto.textContent =
+"0 / 280";
+
+contadorTexto.style.color =
+"#666";
 
 // =========================
 // ✏️ BOTÓN EDITAR (AQUÍ VA)
@@ -526,9 +537,12 @@ comentario.innerHTML = `
         listaComentarios.appendChild(comentario);
 
         comentarioInput.value = "";
-        
-        contadorComentario.textContent =
+
+contadorComentario.textContent =
 "0 / 150";
+
+contadorComentario.style.color =
+"#666";
 
     });
 
