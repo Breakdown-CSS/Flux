@@ -319,6 +319,8 @@ contadorTexto.style.color =
 
 return;
 
+}
+
     if(contenido.value.trim() === ""){
         return;
     }
