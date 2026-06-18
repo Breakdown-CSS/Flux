@@ -46,10 +46,40 @@ main{
 
 input,
 textarea{
+
     width:100%;
+
     padding:10px;
+
     margin-top:10px;
+
     box-sizing:border-box;
+
+    font-family:'Inter',sans-serif;
+
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-top:10px;
+
+    box-sizing:border-box;
+
+    font-family:'Inter',sans-serif;
+
+    font-size:15px;
+
+    border-radius:14px;
+
+    border:1px solid #d6d9de;
+
+    outline:none;
+
 }
 
 textarea{
@@ -447,13 +477,29 @@ button:hover{
    AJUSTE DE ANCHURA CUADRO DE PUBLICACIÓN
 ========================= */
 
+/* =========================
+   AJUSTE DE ANCHURA CUADRO DE PUBLICACIÓN
+========================= */
+
 .crear-post textarea{
 
     width:100%;
 
     min-height:140px;
-@media(max-width:768px){
+
+}
+
+#contenido{
+
+    min-height:120px;
+
     font-size:16px;
+
+    line-height:1.5;
+
+    border-radius:16px;
+
+    padding:14px;
 
 }
 
@@ -461,4 +507,38 @@ button:hover{
     flex:1;
     min-width:0;
     width:100%;
+}
+
+#fotoPerfil{
+    display:none;
+}
+
+#contenido{
+
+    min-height:120px;
+
+    font-size:16px;
+
+    line-height:1.5;
+
+}
+
+#contenido{
+
+    background:#f7f9fa;
+
+}
+
+#contenido:focus{
+
+    border-color:#1877f2;
+
+    box-shadow:0 0 0 3px rgba(24,119,242,0.15);
+
+}
+
+#biografiaInput{
+
+    border-radius:14px;
+
 }
