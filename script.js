@@ -49,6 +49,23 @@ document.getElementById("biografiaInput");
 const guardarBio =
 document.getElementById("guardarBio");
 
+const contadorBio =
+document.createElement("div");
+
+contadorBio.style.fontSize =
+"12px";
+
+contadorBio.style.color =
+"#666";
+
+contadorBio.textContent =
+"0 / 160";
+
+biografiaInput.parentNode.insertBefore(
+    contadorBio,
+    guardarBio
+);
+
 const pantallaCarga =
 document.getElementById("pantallaCarga");
 
@@ -163,15 +180,14 @@ nombreRegistro.value.trim();
 
 if(usuarioRegistro.value.trim() === ""){
 
-    usuarioPerfil.textContent =
-    "@usuario";
+    alert("Debes escribir un nombre de usuario");
 
-}else{
-
-    usuarioPerfil.textContent =
-    "@" + usuarioRegistro.value.trim();
+    return;
 
 }
+
+usuarioPerfil.textContent =
+"@" + usuarioRegistro.value.trim();
 
     avatar.src =
     previewRegistro.src;
@@ -198,6 +214,33 @@ guardarBio.addEventListener("click", () => {
     biografiaInput.value.trim();
 
     biografiaInput.value = "";
+    
+    contadorBio.textContent =
+"0 / 160";
+
+});
+
+biografiaInput.addEventListener(
+"input",
+() => {
+
+    const actual =
+    biografiaInput.value.length;
+
+    contadorBio.textContent =
+    `${actual} / 160`;
+
+    if(actual >= 160){
+
+        contadorBio.style.color =
+        "red";
+
+    }else{
+
+        contadorBio.style.color =
+        "#666";
+
+    }
 
 });
 
