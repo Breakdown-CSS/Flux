@@ -94,6 +94,9 @@ document.getElementById("modoOscuro");
 const contadorPosts =
 document.getElementById("contadorPosts");
 
+const notificacion =
+document.getElementById("notificacion");
+
 const contadorTexto = document.createElement("div");
 
 contadorTexto.style.fontSize = "12px";
@@ -370,7 +373,11 @@ obtenerTiempoRelativo(fecha);
     🗑 Eliminar
 </button>
 
-        <div class="comentarios">
+<button class="toggle-comentarios">
+    💬 Ver comentarios (0)
+</button>
+
+<div class="comentarios" style="display:none;">
 
 <input
     type="text"
@@ -394,6 +401,14 @@ obtenerTiempoRelativo(fecha);
     `;
 
 feed.prepend(post);
+
+notificacion.style.opacity = "1";
+
+setTimeout(() => {
+
+    notificacion.style.opacity = "0";
+
+}, 2000);
 
 cantidadPosts++;
 
@@ -519,8 +534,33 @@ comentarioInput.addEventListener("input", () => {
 
 });
 
-    const listaComentarios =
-    post.querySelector(".lista-comentarios");
+const toggleComentarios =
+post.querySelector(".toggle-comentarios");
+
+const cajaComentarios =
+post.querySelector(".comentarios");
+
+toggleComentarios.addEventListener("click", () => {
+
+    if(cajaComentarios.style.display === "none"){
+
+        cajaComentarios.style.display = "block";
+
+        toggleComentarios.textContent =
+        `💬 Ocultar comentarios (${cantidadComentarios})`;
+
+    }else{
+
+        cajaComentarios.style.display = "none";
+
+        toggleComentarios.textContent =
+        `💬 Ver comentarios (${cantidadComentarios})`;
+
+    }
+
+});
+
+let cantidadComentarios = 0;
 
     comentarBtn.addEventListener("click", () => {
 
@@ -556,6 +596,20 @@ comentario.innerHTML = `
 `;
 
         listaComentarios.appendChild(comentario);
+        
+        cantidadComentarios++;
+
+if(cajaComentarios.style.display === "none"){
+
+    toggleComentarios.textContent =
+    `💬 Ver comentarios (${cantidadComentarios})`;
+
+}else{
+
+    toggleComentarios.textContent =
+    `💬 Ocultar comentarios (${cantidadComentarios})`;
+
+}
 
         comentarioInput.value = "";
 

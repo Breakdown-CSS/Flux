@@ -12,10 +12,13 @@ header{
 }
 
 main{
-    width:80%;
-    max-width:800px;
+
+    width:min(95%, 1400px);
+
     margin:auto;
+
     margin-top:20px;
+
 }
 
 .perfil{
@@ -252,8 +255,11 @@ header{
 }
 
 #logoFlux{
-    width:250px;
+
+    width:min(250px, 80vw);
+
     height:auto;
+
 }
 
 /* PANTALLA DE CARGA */
@@ -277,9 +283,11 @@ header{
 }
 
 #logoCarga{
-    width:550px;
+
+    width:min(550px, 90vw);
+
     height:auto;
-    margin-bottom:20px;
+
 }
 
 #pantallaCarga h1{
@@ -372,7 +380,7 @@ header{
 
 .perfil{
 
-    width:280px;
+    width:clamp(250px, 25vw, 320px);
 
     flex-shrink:0;
 
@@ -395,6 +403,30 @@ header{
 }
 
 @media(max-width:768px){
+  
+  main{
+
+    width:95%;
+
+}
+
+#contenido{
+
+    min-height:130px;
+
+}
+
+.post{
+
+    padding:12px;
+
+}
+
+.crear-post{
+
+    padding:14px;
+
+}
     
     .zona-feed{
     width:100%;
@@ -491,15 +523,13 @@ button:hover{
 
 #contenido{
 
-    min-height:120px;
+    background:#f7f9fa;
+
+    min-height:160px;
 
     font-size:16px;
 
-    line-height:1.5;
-
-    border-radius:16px;
-
-    padding:14px;
+    line-height:1.6;
 
 }
 
@@ -540,5 +570,47 @@ button:hover{
 #biografiaInput{
 
     border-radius:14px;
+
+}
+
+img{
+
+    max-width:100%;
+
+    height:auto;
+
+}
+
+button{
+
+    min-height:44px;
+
+}
+
+#notificacion{
+
+    position:fixed;
+
+    top:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#28a745;
+
+    color:white;
+
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    z-index:99999;
+
+    opacity:0;
+
+    pointer-events:none;
 
 }
