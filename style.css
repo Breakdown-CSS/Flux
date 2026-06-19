@@ -404,6 +404,27 @@ header{
 
 @media(max-width:768px){
   
+  .perfil{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+}
+
+#avatar{
+
+    width:100px;
+    height:100px;
+
+}
+
+#nombrePerfil{
+
+    font-size:24px;
+
+}
+  
   main{
 
     width:95%;
@@ -594,6 +615,8 @@ button{
     top:20px;
 
     left:50%;
+    
+    transform:translateY(20px);
 
     transform:translateX(-50%);
 
@@ -612,5 +635,63 @@ button{
     opacity:0;
 
     pointer-events:none;
+
+}
+
+button{
+
+    max-width:100%;
+
+    word-break:break-word;
+
+}
+
+#notificacion{
+
+    position:fixed;
+
+    bottom:20px;
+    right:20px;
+
+    background:#28a745;
+
+    color:white;
+
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:0.3s;
+
+    z-index:9999;
+
+}
+
+.post button{
+
+    margin-right:8px;
+    margin-bottom:8px;
+
+}
+
+.comentarios{
+
+    margin-top:15px;
+
+    padding-top:15px;
+
+    border-top:1px solid #ddd;
+
+}
+
+.dark-mode .comentarios{
+
+    border-top:1px solid #444;
 
 }
