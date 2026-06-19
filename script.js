@@ -511,6 +511,9 @@ eliminarBtn.addEventListener("click", () => {
     const contadorComentario =
 post.querySelector(".contador-comentario");
 
+const listaComentarios =
+post.querySelector(".lista-comentarios");
+
 comentarioInput.addEventListener("input", () => {
 
     const max = 150;
