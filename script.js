@@ -190,26 +190,35 @@ fotoRegistro.addEventListener("change", (e) => {
 
 btnRegistro.addEventListener("click", () => {
 
-    if(nombreRegistro.value.trim() === ""){
+    if(nombreRegistro.value.trim().length < 3){
 
-        alert("Debes escribir un nombre");
+    alert(
+        "El nombre debe tener al menos 3 caracteres"
+    );
 
-        return;
-    }
+    return;
+}
 
 nombrePerfil.textContent =
 nombreRegistro.value.trim();
 
-if(usuarioRegistro.value.trim() === ""){
+if(usuarioRegistro.value.trim().length < 3){
 
-    alert("Debes escribir un nombre de usuario");
+    alert(
+        "El usuario debe tener al menos 3 caracteres"
+    );
 
     return;
 
 }
 
+const usuarioLimpio =
+usuarioRegistro.value
+.trim()
+.toLowerCase();
+
 usuarioPerfil.textContent =
-"@" + usuarioRegistro.value.trim();
+"@" + usuarioLimpio;
 
     avatar.src =
     previewRegistro.src;
