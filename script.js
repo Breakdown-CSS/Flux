@@ -16,6 +16,33 @@ document.getElementById("contenido");
 const feed =
 document.getElementById("feed");
 
+const abrirPerfil =
+document.getElementById("abrirPerfil");
+
+const volverInicio =
+document.getElementById("volverInicio");
+
+const perfilCompleto =
+document.getElementById("perfilCompleto");
+
+const perfilCompletoAvatar =
+document.getElementById("perfilCompletoAvatar");
+
+const perfilCompletoNombre =
+document.getElementById("perfilCompletoNombre");
+
+const perfilCompletoUsuario =
+document.getElementById("perfilCompletoUsuario");
+
+const perfilCompletoBio =
+document.getElementById("perfilCompletoBio");
+
+const perfilCompletoContador =
+document.getElementById("perfilCompletoContador");
+
+const perfilCompletoPosts =
+document.getElementById("perfilCompletoPosts");
+
 const registro =
 document.getElementById("registro");
 
@@ -643,5 +670,40 @@ window.addEventListener("load", () => {
         "none";
 
     }, 2000);
+
+});
+
+abrirPerfil.addEventListener("click", () => {
+
+    perfilCompletoAvatar.src =
+    avatar.src;
+
+    perfilCompletoNombre.textContent =
+    nombrePerfil.textContent;
+
+    perfilCompletoUsuario.textContent =
+    usuarioPerfil.textContent;
+
+    perfilCompletoBio.textContent =
+    biografiaPerfil.textContent;
+
+    perfilCompletoContador.textContent =
+    contadorPosts.textContent;
+
+    document.querySelector(
+        ".contenedor-principal"
+    ).style.display = "none";
+
+    perfilCompleto.style.display = "block";
+
+});
+
+volverInicio.addEventListener("click", () => {
+
+    perfilCompleto.style.display = "none";
+
+    document.querySelector(
+        ".contenedor-principal"
+    ).style.display = "flex";
 
 });

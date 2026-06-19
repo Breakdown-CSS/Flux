@@ -1,24 +1,19 @@
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     font-family:'Inter', sans-serif;
     background:#f0f2f5;
 }
 
-header{
-    background:#1877f2;
-    color:white;
-    text-align:center;
-    padding:15px;
-}
-
 main{
-
-    width:min(95%, 1400px);
-
-    margin:auto;
-
-    margin-top:20px;
-
+    width:100%;
+    max-width:1400px;
+    margin:20px auto 0 auto;
+    padding:0 12px;
+    overflow-x:hidden;
 }
 
 .perfil{
@@ -45,21 +40,6 @@ main{
     border-radius:10px;
     margin-bottom:20px;
     box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-input,
-textarea{
-
-    width:100%;
-
-    padding:10px;
-
-    margin-top:10px;
-
-    box-sizing:border-box;
-
-    font-family:'Inter',sans-serif;
-
 }
 
 input,
@@ -98,6 +78,10 @@ button{
     padding:10px 15px;
     border-radius:5px;
     cursor:pointer;
+
+    min-height:44px;
+    max-width:100%;
+    word-break:break-word;
 }
 
 button:hover{
@@ -379,6 +363,7 @@ header{
 }
 
 .perfil{
+    overflow:hidden;
 
     width:clamp(250px, 25vw, 320px);
 
@@ -424,18 +409,6 @@ header{
     font-size:24px;
 
 }
-  
-  main{
-
-    width:95%;
-
-}
-
-#contenido{
-
-    min-height:130px;
-
-}
 
 .post{
 
@@ -447,18 +420,6 @@ header{
 
     padding:14px;
 
-}
-    
-    .zona-feed{
-    width:100%;
-}
-
-.crear-post{
-    width:100%;
-}
-
-#feed{
-    width:100%;
 }
 
     .contenedor-principal{
@@ -501,9 +462,8 @@ header{
 }
 
 .perfil{
-
     overflow:hidden;
-
+    contain:layout paint;
 }
 
 /* =========================
@@ -518,12 +478,14 @@ header{
     transform .25s ease;
 }
 
-button:hover{
-    transform:translateY(-2px);
-}
+@media (hover:hover){
+    button:hover{
+        transform:translateY(-2px);
+    }
 
-.post:hover{
-    transform:translateY(-3px);
+    .post:hover{
+        transform:translateY(-3px);
+    }
 }
 
 /* =========================
@@ -542,50 +504,24 @@ button:hover{
 
 }
 
-#contenido{
-
-    background:#f7f9fa;
-
-    min-height:160px;
-
-    font-size:16px;
-
-    line-height:1.6;
-
-}
-
-.zona-feed{
-    flex:1;
-    min-width:0;
-    width:100%;
-}
-
 #fotoPerfil{
     display:none;
 }
 
 #contenido{
-
-    min-height:120px;
-
-    font-size:16px;
-
-    line-height:1.5;
-
-}
-
-#contenido{
-
     background:#f7f9fa;
-
+    min-height:120px;
+    font-size:16px;
+    line-height:1.5;
+    border-radius:16px;
+    padding:14px;
+    width:100%;
+    box-sizing:border-box;
 }
 
 #contenido:focus{
-
     border-color:#1877f2;
-
     box-shadow:0 0 0 3px rgba(24,119,242,0.15);
-
 }
 
 #biografiaInput{
@@ -602,73 +538,29 @@ img{
 
 }
 
-button{
-
-    min-height:44px;
-
-}
-
 #notificacion{
-
     position:fixed;
-
-    top:20px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    background:#28a745;
-
-    color:white;
-
-    padding:12px 20px;
-
-    border-radius:12px;
-
-    font-weight:bold;
-
-    z-index:99999;
-
-    opacity:0;
-
-    pointer-events:none;
-
-}
-
-button{
-
-    max-width:100%;
-
-    word-break:break-word;
-
-}
-
-#notificacion{
-
-    position:fixed;
-
     bottom:20px;
     right:20px;
 
-    background:#28a745;
+    max-width:80vw;
+    width:auto;
 
+    background:#28a745;
     color:white;
 
-    padding:12px 20px;
-
+    padding:10px 14px;
     border-radius:12px;
 
     font-weight:bold;
 
     opacity:0;
-
     pointer-events:none;
 
     transition:0.3s;
-
     z-index:9999;
 
+    font-size:14px;
 }
 
 .post button{
@@ -692,4 +584,13 @@ button{
 
     border-top:1px solid #444;
 
+}
+
+html, body{
+    width:100%;
+    overflow-x:hidden;
+}
+
+html{
+    -webkit-text-size-adjust:100%;
 }
