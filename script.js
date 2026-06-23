@@ -124,6 +124,16 @@ document.getElementById("contadorPosts");
 const notificacion =
 document.getElementById("notificacion");
 
+const insigniaVerificada =
+document.getElementById(
+"insigniaVerificada"
+);
+
+const insigniaVerificadaCompleta =
+document.getElementById(
+"insigniaVerificadaCompleta"
+);
+
 const contadorTexto = document.createElement("div");
 
 contadorTexto.style.fontSize = "12px";
@@ -261,6 +271,24 @@ usuarioPerfil.textContent =
     "block";
 
 });
+
+if(usuarioLimpio === "david"){
+
+    insigniaVerificada.style.display =
+    "block";
+
+    insigniaVerificadaCompleta.style.display =
+    "block";
+
+}else{
+
+    insigniaVerificada.style.display =
+    "none";
+
+    insigniaVerificadaCompleta.style.display =
+    "none";
+
+}
 
 guardarBio.addEventListener("click", () => {
 

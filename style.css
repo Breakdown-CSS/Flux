@@ -594,3 +594,34 @@ html, body{
 html{
     -webkit-text-size-adjust:100%;
 }
+
+.nombre-con-insignia{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+}
+
+#insigniaVerificada,
+#insigniaVerificadaCompleta{
+
+    width:24px;
+    height:24px;
+
+    object-fit:contain;
+
+    display:none;
+
+}
+
+@media(max-width:768px){
+
+    #insigniaVerificada,
+    #insigniaVerificadaCompleta{
+
+        width:20px;
+        height:20px;
+
+    }
+
+}
