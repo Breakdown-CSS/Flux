@@ -265,24 +265,20 @@ usuarioRegistro.value
 usuarioPerfil.textContent =
 "@" + usuarioLimpio;
 
-actualizarInsignias();
+function actualizarInsignias(){
 
-if(usuarioLimpio === "david"){
+    const esDavid =
+    usuarioPerfil.textContent === "@david";
 
-    insigniaVerificada.style.display =
-    "block";
+    if(insigniaVerificada){
+        insigniaVerificada.style.display =
+        esDavid ? "block" : "none";
+    }
 
-    insigniaVerificadaCompleta.style.display =
-    "block";
-
-}else{
-
-    insigniaVerificada.style.display =
-    "none";
-
-    insigniaVerificadaCompleta.style.display =
-    "none";
-
+    if(insigniaVerificadaCompleta){
+        insigniaVerificadaCompleta.style.display =
+        esDavid ? "block" : "none";
+    }
 }
 
     avatar.src =
@@ -700,18 +696,16 @@ contadorComentario.style.color =
 
 });
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
+
+    const pantallaCarga =
+    document.getElementById("pantallaCarga");
+
+    if(!pantallaCarga) return;
 
     setTimeout(() => {
-
-        const pantallaCarga =
-        document.getElementById("pantallaCarga");
-
-        if(pantallaCarga){
-            pantallaCarga.style.display = "none";
-        }
-
-    }, 1500);
+        pantallaCarga.style.display = "none";
+    }, 800);
 
 });
 
@@ -749,3 +743,12 @@ volverInicio.addEventListener("click", () => {
     ).style.display = "flex";
 
 });
+
+setTimeout(() => {
+    const pantallaCarga =
+    document.getElementById("pantallaCarga");
+
+    if(pantallaCarga){
+        pantallaCarga.style.display = "none";
+    }
+}, 5000);
