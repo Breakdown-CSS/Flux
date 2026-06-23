@@ -125,14 +125,22 @@ const notificacion =
 document.getElementById("notificacion");
 
 const insigniaVerificada =
-document.getElementById(
-"insigniaVerificada"
-);
+document.getElementById("insigniaVerificada");
 
 const insigniaVerificadaCompleta =
-document.getElementById(
-"insigniaVerificadaCompleta"
-);
+document.getElementById("insigniaVerificadaCompleta");
+
+function actualizarInsignias(){
+
+    const esDavid =
+    usuarioPerfil.textContent === "@david";
+
+    insigniaVerificada.style.display =
+    esDavid ? "block" : "none";
+
+    insigniaVerificadaCompleta.style.display =
+    esDavid ? "block" : "none";
+}
 
 const contadorTexto = document.createElement("div");
 
@@ -257,20 +265,7 @@ usuarioRegistro.value
 usuarioPerfil.textContent =
 "@" + usuarioLimpio;
 
-    avatar.src =
-    previewRegistro.src;
-
-    nombreRegistro.value = "";
-    usuarioRegistro.value = "";
-    fotoRegistro.value = "";
-
-    registro.style.display =
-    "none";
-
-    app.style.display =
-    "block";
-
-});
+actualizarInsignias();
 
 if(usuarioLimpio === "david"){
 
@@ -289,6 +284,21 @@ if(usuarioLimpio === "david"){
     "none";
 
 }
+
+    avatar.src =
+    previewRegistro.src;
+
+    nombreRegistro.value = "";
+    usuarioRegistro.value = "";
+    fotoRegistro.value = "";
+
+    registro.style.display =
+    "none";
+
+    app.style.display =
+    "block";
+
+});
 
 guardarBio.addEventListener("click", () => {
 
@@ -690,14 +700,18 @@ contadorComentario.style.color =
 
 });
 
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(() => {
 
-        pantallaCarga.style.display =
-        "none";
+        const pantallaCarga =
+        document.getElementById("pantallaCarga");
 
-    }, 2000);
+        if(pantallaCarga){
+            pantallaCarga.style.display = "none";
+        }
+
+    }, 1500);
 
 });
 
