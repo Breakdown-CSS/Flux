@@ -133,7 +133,7 @@ document.getElementById("insigniaVerificadaCompleta");
 function actualizarInsignias(){
 
     const esDavid =
-    usuarioPerfil.textContent === "@david";
+    usuarioPerfil.textContent.trim().toLowerCase() === "@david";
 
     insigniaVerificada.style.display =
     esDavid ? "block" : "none";
@@ -265,21 +265,7 @@ usuarioRegistro.value
 usuarioPerfil.textContent =
 "@" + usuarioLimpio;
 
-function actualizarInsignias(){
-
-    const esDavid =
-    usuarioPerfil.textContent === "@david";
-
-    if(insigniaVerificada){
-        insigniaVerificada.style.display =
-        esDavid ? "block" : "none";
-    }
-
-    if(insigniaVerificadaCompleta){
-        insigniaVerificadaCompleta.style.display =
-        esDavid ? "block" : "none";
-    }
-}
+actualizarInsignias();
 
     avatar.src =
     previewRegistro.src;
