@@ -41,43 +41,119 @@ rel="stylesheet">
 
 <main>
 
-    <section id="registro">
+<section id="registro">
 
     <h2>Bienvenido a Flux</h2>
 
-<img
-    id="previewRegistro"
-    src="defaultprofile.png"
-    alt="Vista previa">
+    <div id="formularioRegistro">
 
-    <label
-        for="fotoRegistro"
-        class="btn-imagen">
+        <h3>Crear una cuenta</h3>
 
-        Elegir foto de perfil
+        <img
+            id="previewRegistro"
+            src="defaultprofile.png"
+            alt="Vista previa">
 
-    </label>
+        <label
+            for="fotoRegistro"
+            class="btn-imagen">
 
-    <input
-        type="file"
-        id="fotoRegistro"
-        accept="image/*">
+            Elegir foto de perfil
 
-<input
-    type="text"
-    id="nombreRegistro"
-    maxlength="30"
-    placeholder="Nombre de usuario">
+        </label>
 
-<input
-    type="text"
-    id="usuarioRegistro"
-    maxlength="15"
-    placeholder="@usuario">
+        <input
+            type="file"
+            id="fotoRegistro"
+            accept="image/*">
 
-    <button id="btnRegistro">
-        Registrarse
-    </button>
+        <input
+            type="text"
+            id="nombreRegistro"
+            maxlength="30"
+            placeholder="Nombre">
+
+        <input
+            type="text"
+            id="usuarioRegistro"
+            maxlength="15"
+            placeholder="@usuario">
+
+        <input
+            type="email"
+            id="correoRegistro"
+            placeholder="Correo electrónico">
+
+        <input
+            type="password"
+            id="contrasenaRegistro"
+            minlength="8"
+            placeholder="Contraseña (mínimo 8 caracteres)">
+
+            <p
+    id="ayudaContrasena"
+    class="ayuda-formulario">
+
+    Mínimo 8 caracteres.
+
+</p>
+
+        <button id="btnRegistro">
+            Registrarse
+        </button>
+
+        <p>
+            ¿Ya tienes una cuenta?
+        </p>
+
+        <button
+            id="mostrarLogin"
+            type="button">
+
+            Iniciar sesión
+
+        </button>
+
+    </div>
+
+
+    <div
+        id="formularioLogin"
+        style="display:none;">
+
+        <h3>Iniciar sesión</h3>
+
+        <input
+            type="email"
+            id="correoLogin"
+            placeholder="Correo electrónico">
+
+        <input
+            type="password"
+            id="contrasenaLogin"
+            placeholder="Contraseña">
+
+        <button
+            id="btnLogin"
+            type="button">
+
+            Iniciar sesión
+
+        </button>
+
+        <p>
+            ¿Todavía no tienes una cuenta?
+        </p>
+
+        <button
+            id="mostrarRegistro"
+            type="button">
+
+            Crear una cuenta
+
+        </button>
+
+    </div>
 
 </section>
 
@@ -144,6 +220,10 @@ rel="stylesheet">
 
 <button id="abrirPerfil">
     👤 Ver mi perfil
+</button>
+
+<button id="btnCerrarSesion">
+    Cerrar sesión
 </button>
 
     </section>
@@ -221,6 +301,8 @@ placeholder="¿Qué estás pensando?">
 <div id="notificacion" class="notificacion">
     ✓ Publicación creada
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="script.js"></script>
 

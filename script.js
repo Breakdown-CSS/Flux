@@ -1,3 +1,19 @@
+// =========================
+// 🔵 CONEXIÓN CON SUPABASE
+// =========================
+
+const SUPABASE_URL =
+"https://xbdrhxatzstxukgsikrz.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_FEWca-AvV6RsIAiwmgfBgA_yRI3M_HR";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
 const avatar =
 document.getElementById("avatar");
 
@@ -66,6 +82,33 @@ document.getElementById("previewRegistro");
 
 const btnRegistro =
 document.getElementById("btnRegistro");
+
+const formularioRegistro =
+document.getElementById("formularioRegistro");
+
+const formularioLogin =
+document.getElementById("formularioLogin");
+
+const mostrarLogin =
+document.getElementById("mostrarLogin");
+
+const mostrarRegistro =
+document.getElementById("mostrarRegistro");
+
+const btnLogin =
+document.getElementById("btnLogin");
+
+const correoRegistro =
+document.getElementById("correoRegistro");
+
+const contrasenaRegistro =
+document.getElementById("contrasenaRegistro");
+
+const correoLogin =
+document.getElementById("correoLogin");
+
+const contrasenaLogin =
+document.getElementById("contrasenaLogin");
 
 const biografiaPerfil =
 document.getElementById("biografiaPerfil");
@@ -201,16 +244,135 @@ function obtenerTiempoRelativo(fechaPost){
 
 }
 
-fotoPerfil.addEventListener("change", (e) => {
+
+fotoPerfil.addEventListener("change", async (e) => {
+
     const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            avatar.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+
+    if (!file) {
+        return;
     }
+
+    // =========================
+    // VALIDAR IMAGEN
+    // =========================
+
+    if (!file.type.startsWith("image/")) {
+
+        alert("Selecciona un archivo de imagen válido.");
+        fotoPerfil.value = "";
+        return;
+
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+
+        alert("La imagen no puede superar los 5 MB.");
+        fotoPerfil.value = "";
+        return;
+
+    }
+
+    // =========================
+    // OBTENER USUARIO ACTUAL
+    // =========================
+
+    const { data: sesion, error: errorSesion } =
+    await supabaseClient.auth.getUser();
+
+    if (errorSesion || !sesion.user) {
+
+        console.error(errorSesion);
+
+        alert("Debes iniciar sesión para cambiar tu fotografía.");
+        return;
+
+    }
+
+    const user = sesion.user;
+
+    // =========================
+    // PREPARAR IMAGEN
+    // =========================
+
+    const extension =
+    file.name.split(".").pop().toLowerCase();
+
+    const rutaImagen =
+    user.id + "/" + Date.now() + "." + extension;
+
+    // =========================
+    // SUBIR IMAGEN A STORAGE
+    // =========================
+
+    const { data: imagen, error: errorImagen } =
+    await supabaseClient.storage
+    .from("avatars")
+    .upload(rutaImagen, file, {
+
+        contentType: file.type,
+        upsert: false
+
+    });
+
+    if (errorImagen) {
+
+        console.error(errorImagen);
+
+        alert("No se pudo subir la fotografía.");
+
+        return;
+
+    }
+
+    // =========================
+    // OBTENER URL PÚBLICA
+    // =========================
+
+    const { data: urlImagen } =
+    supabaseClient.storage
+    .from("avatars")
+    .getPublicUrl(imagen.path);
+
+    const avatarUrl =
+    urlImagen.publicUrl;
+
+    // =========================
+    // GUARDAR URL EN EL PERFIL
+    // =========================
+
+    const { error: errorPerfil } =
+    await supabaseClient
+    .from("perfiles")
+    .update({
+
+        avatar_url: avatarUrl
+
+    })
+    .eq("id", user.id);
+
+    if (errorPerfil) {
+
+        console.error(errorPerfil);
+
+        alert("La imagen se subió, pero no se pudo actualizar el perfil.");
+
+        return;
+
+    }
+
+    // =========================
+    // ACTUALIZAR IMAGEN VISUAL
+    // =========================
+
+    avatar.src = avatarUrl;
+
+    alert("¡Fotografía de perfil actualizada correctamente!");
+
+    console.log("Nueva fotografía:", avatarUrl);
+
 });
+
 
 fotoRegistro.addEventListener("change", (e) => {
 
@@ -233,73 +395,225 @@ fotoRegistro.addEventListener("change", (e) => {
 
 });
 
-btnRegistro.addEventListener("click", () => {
 
-    if(nombreRegistro.value.trim().length < 3){
+btnRegistro.addEventListener("click", async () => {
 
-    alert(
-        "El nombre debe tener al menos 3 caracteres"
+    const correo =
+    correoRegistro.value.trim();
+
+    const contrasena =
+    contrasenaRegistro.value;
+
+    // =========================
+    // VALIDAR CORREO
+    // =========================
+
+    const formatoCorreo =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!formatoCorreo.test(correo)){
+
+        alert("Escribe un correo electrónico válido.");
+        return;
+
+    }
+
+    // =========================
+    // VALIDAR CONTRASEÑA
+    // =========================
+
+    if(contrasena.length < 8){
+
+        alert("La contraseña debe tener al menos 8 caracteres.");
+        return;
+
+    }
+
+    // =========================
+    // VALIDAR NOMBRE
+    // =========================
+
+    const nombre =
+    nombreRegistro.value.trim();
+
+    if(nombre.length < 3){
+
+        alert("El nombre debe tener al menos 3 caracteres.");
+        return;
+
+    }
+
+    // =========================
+    // VALIDAR USUARIO
+    // =========================
+
+    const usuarioLimpio =
+    usuarioRegistro.value.trim().toLowerCase();
+
+    if(usuarioLimpio.length < 3){
+
+        alert("El usuario debe tener al menos 3 caracteres.");
+        return;
+
+    }
+
+    // =========================
+    // CREAR CUENTA EN SUPABASE
+    // =========================
+
+    const { data, error } =
+    await supabaseClient.auth.signUp({
+
+        email: correo,
+        password: contrasena
+
+    });
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "No se pudo crear la cuenta: " +
+            error.message
+        );
+
+        return;
+
+    }
+
+    // =========================
+    // GUARDAR PERFIL EN SUPABASE
+    // =========================
+
+    const { error: errorPerfil } =
+    await supabaseClient
+    .from("perfiles")
+    .insert({
+
+        id: data.user.id,
+        nombre: nombre,
+        usuario: usuarioLimpio,
+        biografia: "",
+        avatar_url: null,
+        rol: "usuario"
+
+    });
+
+    if(errorPerfil){
+
+        console.error(errorPerfil);
+
+        alert(
+            "La cuenta se creó, pero no se pudo guardar el perfil: " +
+            errorPerfil.message
+        );
+
+        return;
+
+    }
+
+    // =========================
+    // ACTUALIZAR DATOS VISUALES
+    // =========================
+
+    nombrePerfil.textContent =
+    nombre;
+
+    usuarioPerfil.textContent =
+    "@" + usuarioLimpio;
+
+    actualizarInsignias();
+
+    // =========================
+    // CUENTA CREADA
+    // =========================
+
+    console.log(
+        "Usuario creado:",
+        data.user
     );
 
-    return;
-}
-
-nombrePerfil.textContent =
-nombreRegistro.value.trim();
-
-if(usuarioRegistro.value.trim().length < 3){
-
     alert(
-        "El usuario debe tener al menos 3 caracteres"
+        "¡Cuenta creada correctamente! Ahora puedes iniciar sesión."
     );
 
-    return;
+    // =========================
+    // CERRAR SESIÓN TEMPORAL
+    // =========================
 
-}
+    await supabaseClient.auth.signOut();
 
-const usuarioLimpio =
-usuarioRegistro.value
-.trim()
-.toLowerCase();
-
-usuarioPerfil.textContent =
-"@" + usuarioLimpio;
-
-actualizarInsignias();
-
-    avatar.src =
-    previewRegistro.src;
+    // =========================
+    // LIMPIAR FORMULARIO
+    // =========================
 
     nombreRegistro.value = "";
     usuarioRegistro.value = "";
+    correoRegistro.value = "";
+    contrasenaRegistro.value = "";
     fotoRegistro.value = "";
 
-    registro.style.display =
+    previewRegistro.src =
+    "defaultprofile.png";
+
+    // =========================
+    // MOSTRAR LOGIN
+    // =========================
+
+    formularioRegistro.style.display =
     "none";
 
-    app.style.display =
+    formularioLogin.style.display =
     "block";
 
 });
 
-guardarBio.addEventListener("click", () => {
 
-    if(biografiaInput.value.trim() === ""){
+guardarBio.addEventListener("click", async () => {
+
+    const nuevaBiografia = biografiaInput.value.trim();
+
+    if (nuevaBiografia === "") {
         return;
     }
 
-    biografiaPerfil.textContent =
-    biografiaInput.value.trim();
+    // Obtener el usuario actual
+    const { data: { user }, error: errorUsuario } =
+    await supabaseClient.auth.getUser();
+
+    if (errorUsuario || !user) {
+        alert("No se pudo identificar tu cuenta.");
+        return;
+    }
+
+    // Guardar la biografía en Supabase
+    const { error } = await supabaseClient
+    .from("perfiles")
+    .update({
+        biografia: nuevaBiografia
+    })
+    .eq("id", user.id);
+
+    if (error) {
+        console.error(error);
+        alert("No se pudo guardar la biografía.");
+        return;
+    }
+
+    // Actualizar la interfaz
+    biografiaPerfil.textContent = nuevaBiografia;
 
     biografiaInput.value = "";
 
-contadorBio.textContent =
-"0 / 160";
+    contadorBio.textContent = "0 / 160";
 
-contadorBio.style.color =
-"#666";
+    contadorBio.style.color = "#666";
+
+    alert("¡Biografía guardada correctamente!");
 
 });
+
 
 biografiaInput.addEventListener(
 "input",
@@ -349,7 +663,20 @@ modoOscuro.addEventListener("click", () => {
 
 });
 
-publicar.addEventListener("click", () => {
+publicar.addEventListener("click", async () => {
+
+    const { data: { user }, error: errorUsuario } =
+    await supabaseClient.auth.getUser();
+
+    if(errorUsuario || !user){
+
+        console.error(
+            "No se pudo identificar al usuario:",
+            errorUsuario
+        );
+
+        return;
+    }
 
     if(contenido.value.trim() === ""){
         return;
@@ -378,19 +705,48 @@ contadorTexto.style.color =
 
 return;
 
-}
+    }
 
     if(contenido.value.trim() === ""){
         return;
     }
 
+    // =========================
+    // GUARDAR PUBLICACIÓN EN SUPABASE
+    // =========================
+
+    const { data: nuevaPublicacion, error: errorPublicacion } =
+    await supabaseClient
+    .from("publicaciones")
+    .insert({
+        usuario_id: user.id,
+        contenido: contenido.value.trim()
+    })
+    .select()
+    .single();
+
+    if(errorPublicacion){
+
+        console.error(
+            "Error al guardar la publicación:",
+            errorPublicacion
+        );
+
+        alert("No se pudo publicar. Inténtalo nuevamente.");
+
+        return;
+    }
+
     const post = document.createElement("div");
+
     post.classList.add("post");
 
-  const fecha = new Date();
+    post.dataset.id = nuevaPublicacion.id;
 
-const tiempoRelativo =
-obtenerTiempoRelativo(fecha);
+    const fecha = new Date();
+
+    const tiempoRelativo =
+    obtenerTiempoRelativo(fecha);
 
     post.innerHTML = `
         <div class="autor-post">
@@ -738,3 +1094,299 @@ setTimeout(() => {
         pantallaCarga.style.display = "none";
     }
 }, 5000);
+
+mostrarLogin.addEventListener("click", () => {
+
+    formularioRegistro.style.display =
+    "none";
+
+    formularioLogin.style.display =
+    "block";
+
+});
+
+mostrarRegistro.addEventListener("click", () => {
+
+    formularioLogin.style.display =
+    "none";
+
+    formularioRegistro.style.display =
+    "block";
+
+});
+
+
+
+btnLogin.addEventListener("click", async () => {
+
+    const correo =
+    correoLogin.value.trim();
+
+    const contrasena =
+    contrasenaLogin.value;
+
+    if(correo === ""){
+        alert("Escribe tu correo electrónico.");
+        return;
+    }
+
+    if(contrasena === ""){
+        alert("Escribe tu contraseña.");
+        return;
+    }
+
+    const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+
+        email: correo,
+        password: contrasena
+
+    });
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "No se pudo iniciar sesión. Revisa tu correo y contraseña."
+        );
+
+        return;
+
+    }
+
+    const perfilCargado =
+    await cargarPerfilUsuario(data.user);
+
+    if(!perfilCargado){
+
+        alert(
+            "Iniciaste sesión, pero no se pudieron cargar tus datos de perfil."
+        );
+
+        return;
+
+    }
+
+    console.log(
+        "Usuario conectado:",
+        data.user
+    );
+
+    alert(
+        "¡Inicio de sesión correcto!"
+    );
+
+});
+
+
+// =========================
+// CARGAR PERFIL DEL USUARIO
+// =========================
+
+async function cargarPerfilUsuario(user){
+
+    const { data: perfil, error } =
+    await supabaseClient
+    .from("perfiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+    if(error){
+
+        console.error(
+            "Error al cargar perfil:",
+            error
+        );
+
+        return false;
+
+    }
+
+    nombrePerfil.textContent =
+    perfil.nombre;
+
+    usuarioPerfil.textContent =
+    "@" + perfil.usuario;
+
+    biografiaPerfil.textContent =
+    perfil.biografia || "Sin biografía.";
+
+    avatar.src =
+    perfil.avatar_url || "defaultprofile.png";
+
+    actualizarInsignias();
+
+    await cargarPublicaciones();
+
+    registro.style.display =
+    "none";
+
+    app.style.display =
+    "block";
+
+    formularioLogin.style.display =
+    "none";
+
+    formularioRegistro.style.display =
+    "block";
+
+    return true;
+
+}
+
+
+// =========================
+// RESTAURAR SESIÓN AL ABRIR FLUX
+// =========================
+
+async function restaurarSesion(){
+
+    const { data, error } =
+    await supabaseClient.auth.getSession();
+
+    if(error){
+
+        console.error(
+            "Error al recuperar la sesión:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    if(data.session){
+
+        console.log(
+            "Sesión recuperada:",
+            data.session.user
+        );
+
+        const perfilCargado =
+        await cargarPerfilUsuario(data.session.user);
+
+        if(!perfilCargado){
+
+            console.error(
+                "No se pudo recuperar el perfil de la sesión."
+            );
+
+        }
+
+    }
+
+}
+
+// =========================
+// CARGAR PUBLICACIONES DESDE SUPABASE
+// =========================
+
+async function cargarPublicaciones(){
+
+    const { data: publicaciones, error } =
+    await supabaseClient
+    .from("publicaciones")
+    .select("*")
+    .order("creado_en", { ascending: false });
+
+    if(error){
+
+        console.error(
+            "Error al cargar publicaciones:",
+            error
+        );
+
+        return;
+    }
+
+    // Limpiar el feed antes de cargar
+    feed.innerHTML = "";
+
+    // Mostrar las publicaciones guardadas
+    publicaciones.forEach(publicacion => {
+
+        const post = document.createElement("div");
+
+        post.classList.add("post");
+
+        post.innerHTML = `
+            <div class="autor-post">
+                <h3>Publicación</h3>
+            </div>
+
+            <p></p>
+
+            <small class="fecha-post">
+                ${obtenerTiempoRelativo(
+                    new Date(publicacion.creado_en)
+                )}
+            </small>
+
+        `;
+
+        post.querySelector("p").textContent =
+        publicacion.contenido;
+
+        feed.appendChild(post);
+
+    });
+
+    cantidadPosts = publicaciones.length;
+
+    contadorPosts.textContent =
+    `Publicaciones: ${cantidadPosts}`;
+
+}
+
+
+
+// =========================
+// EJECUTAR AL ABRIR FLUX
+// =========================
+
+restaurarSesion();
+
+
+// =========================
+// CERRAR SESIÓN
+// =========================
+
+const btnCerrarSesion =
+document.getElementById("btnCerrarSesion");
+
+btnCerrarSesion.addEventListener("click", async () => {
+
+    const { error } =
+    await supabaseClient.auth.signOut();
+
+    if (error) {
+
+        console.error(error);
+
+        alert("No se pudo cerrar la sesión.");
+
+        return;
+    }
+
+    // Ocultar Flux
+    app.style.display = "none";
+
+    // Mostrar pantalla de acceso
+    registro.style.display = "block";
+
+    formularioLogin.style.display = "block";
+
+    formularioRegistro.style.display = "none";
+
+    // Limpiar campos de acceso
+    correoLogin.value = "";
+    contrasenaLogin.value = "";
+
+    // Volver a la pantalla principal
+    perfilCompleto.style.display = "none";
+
+});
+

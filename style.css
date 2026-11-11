@@ -625,3 +625,31 @@ html{
     }
 
 }
+
+#perfilCompletoAvatar {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+#perfilCompleto .perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#perfilCompletoAvatar {
+    margin: 0 auto 15px;
+}
+
+#perfilCompletoBio {
+    max-width: 100%;
+    width: 100%;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
