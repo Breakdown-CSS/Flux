@@ -1395,6 +1395,57 @@ async function cargarPublicaciones(usuarioActualId){
                 )}
             </small>
 
+            <hr>
+
+            <button class="like-btn">
+                👍 Like
+            </button>
+
+            <span class="likes">
+                0 Likes
+            </span>
+
+            <br>
+
+            ${
+                esMiPublicacion
+                ? `
+                    <button class="editar-post">
+                        ✏ Editar
+                    </button>
+
+                    <button class="eliminar-post">
+                        🗑 Eliminar
+                    </button>
+                `
+                : ""
+            }
+
+            <button class="toggle-comentarios">
+                💬 Ver comentarios (0)
+            </button>
+
+            <div class="comentarios" style="display:none;">
+
+                <input
+                    type="text"
+                    class="comentario-input"
+                    maxlength="150"
+                    placeholder="Escribe un comentario"
+                >
+
+                <div class="contador-comentario">
+                    0 / 150
+                </div>
+
+                <button class="comentar-btn">
+                    Comentar
+                </button>
+
+                <div class="lista-comentarios"></div>
+
+            </div>
+
         `;
 
                 post.dataset.id = publicacion.id;
