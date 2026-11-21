@@ -894,12 +894,36 @@ likeBtn.addEventListener("click", () => {
 
 });
 
-eliminarBtn.addEventListener("click", () => {
+eliminarBtn.addEventListener("click", async () => {
 
     const confirmar =
     confirm("¿Eliminar esta publicación?");
 
     if(!confirmar){
+        return;
+    }
+
+    eliminarBtn.disabled = true;
+
+    const { data: eliminada, error } =
+    await supabaseClient
+    .from("publicaciones")
+    .delete()
+    .eq("id", post.dataset.id)
+    .eq("usuario_id", user.id)
+    .select("id");
+
+    if(error || !eliminada || eliminada.length === 0){
+
+        console.error(
+            "Error al eliminar publicación:",
+            error
+        );
+
+        alert("No se pudo eliminar la publicación.");
+
+        eliminarBtn.disabled = false;
+
         return;
     }
 
