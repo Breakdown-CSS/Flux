@@ -1462,6 +1462,59 @@ async function cargarPublicaciones(usuarioActualId){
         post.querySelector("p").textContent =
         publicacion.contenido;
 
+// =========================
+// ELIMINAR PUBLICACIÓN
+// =========================
+
+        if(esMiPublicacion){
+
+            const eliminarBtn =
+                post.querySelector(".eliminar-post");
+
+            eliminarBtn.addEventListener("click", async () => {
+
+                const confirmar =
+                    confirm("¿Eliminar esta publicación?");
+
+                if(!confirmar){
+                    return;
+                }
+
+                eliminarBtn.disabled = true;
+
+                const { data: eliminada, error } =
+                await supabaseClient
+                .from("publicaciones")
+                .delete()
+                .eq("id", publicacion.id)
+                .eq("usuario_id", usuarioActualId)
+                .select("id");
+
+                if(error || !eliminada || eliminada.length === 0){
+
+                    console.error(
+                        "Error al eliminar publicación:",
+                        error
+                    );
+
+                    alert("No se pudo eliminar la publicación.");
+
+                    eliminarBtn.disabled = false;
+
+                    return;
+                }
+
+                post.remove();
+
+                cantidadPosts--;
+
+                contadorPosts.textContent =
+                    `Publicaciones: ${cantidadPosts}`;
+
+            });
+
+        }
+
         feed.appendChild(post);
 
     });
