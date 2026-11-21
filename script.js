@@ -682,28 +682,69 @@ publicar.addEventListener("click", async () => {
         return;
     }
 
-    // 🔥 SI ESTAMOS EDITANDO UNA PUBLICACIÓN
+// =========================
+// GUARDAR EDICIÓN EN SUPABASE
+// =========================
+
     if(postEditando){
 
-const textoEditado = postEditando.querySelector("p");
+        const idPublicacion =
+            postEditando.dataset.id;
 
-if (textoEditado) {
-    textoEditado.textContent = contenido.value;
-}
+        const nuevoContenido =
+            contenido.value.trim();
+
+        if(!idPublicacion){
+            alert("No se encontró el ID de la publicación.");
+            return;
+        }
+
+        publicar.disabled = true;
+
+        const { data: actualizada, error } =
+        await supabaseClient
+        .from("publicaciones")
+        .update({
+            contenido: nuevoContenido
+        })
+        .eq("id", idPublicacion)
+        .eq("usuario_id", user.id)
+        .select("id");
+
+        publicar.disabled = false;
+
+        if(error || !actualizada || actualizada.length === 0){
+
+            console.error(
+                "Error al editar publicación:",
+                error
+            );
+
+            alert("No se pudo guardar la edición.");
+
+            return;
+        }
+
+        const textoEditado =
+            postEditando.querySelector("p");
+
+        if(textoEditado){
+            textoEditado.textContent = nuevoContenido;
+        }
 
         postEditando = null;
 
         publicar.textContent = "Publicar";
 
-contenido.value = "";
+        contenido.value = "";
 
-contadorTexto.textContent =
-"0 / 280";
+        contadorTexto.textContent = "0 / 280";
 
-contadorTexto.style.color =
-"#666";
+        contadorTexto.style.color = "#666";
 
-return;
+        alert("Publicación actualizada correctamente.");
+
+        return;
 
     }
 
