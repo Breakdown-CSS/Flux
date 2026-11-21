@@ -1580,6 +1580,41 @@ async function cargarPublicaciones(usuarioActualId){
 
         }
 
+// =========================
+// BOTÓN EDITAR PUBLICACIÓN
+// =========================
+
+        if(esMiPublicacion){
+
+            const editarBtn =
+                post.querySelector(".editar-post");
+
+            editarBtn.addEventListener("click", () => {
+
+                const textoPost =
+                    post.querySelector("p");
+
+                if(!textoPost){
+                    return;
+                }
+
+                contenido.value =
+                    textoPost.textContent;
+
+                postEditando = post;
+
+                publicar.textContent =
+                    "Guardar cambios";
+
+                contadorTexto.textContent =
+                    `${contenido.value.length} / 280`;
+
+                contenido.focus();
+
+            });
+
+        }
+
         feed.appendChild(post);
 
     });
