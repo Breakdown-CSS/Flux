@@ -1218,7 +1218,7 @@ async function cargarPerfilUsuario(user){
 
     actualizarInsignias();
 
-    await cargarPublicaciones();
+    await cargarPublicaciones(user.id);
 
     registro.style.display =
     "none";
@@ -1284,7 +1284,7 @@ async function restaurarSesion(){
 // CARGAR PUBLICACIONES DESDE SUPABASE
 // =========================
 
-async function cargarPublicaciones(){
+async function cargarPublicaciones(usuarioActualId){
 
     const { data: publicaciones, error } =
     await supabaseClient
@@ -1302,11 +1302,71 @@ async function cargarPublicaciones(){
         return;
     }
 
+    // =========================
+    // OBTENER PERFILES DE LOS AUTORES
+    // =========================
+
+    const idsAutores = [
+        ...new Set(
+            publicaciones.map(
+                publicacion => publicacion.usuario_id
+            )
+        )
+    ];
+
+    let perfilesAutores = [];
+
+    if(idsAutores.length > 0){
+
+        const { data: perfiles, error: errorPerfiles } =
+        await supabaseClient
+        .from("perfiles")
+        .select("id, nombre, usuario, avatar_url")
+        .in("id", idsAutores);
+
+        if(errorPerfiles){
+
+            console.error(
+                "Error al cargar perfiles:",
+                errorPerfiles
+            );
+
+        }else{
+
+            perfilesAutores = perfiles || [];
+
+        }
+
+    }
+
+    const mapaPerfiles = new Map(
+        perfilesAutores.map(perfil => [
+            perfil.id,
+            perfil
+        ])
+    );
+
     // Limpiar el feed antes de cargar
     feed.innerHTML = "";
 
     // Mostrar las publicaciones guardadas
     publicaciones.forEach(publicacion => {
+
+        const autor = mapaPerfiles.get(
+            publicacion.usuario_id
+        );
+
+        const nombreAutor =
+            autor?.nombre || "Usuario";
+
+        const usuarioAutor =
+            autor?.usuario || "";
+
+        const avatarAutor =
+            autor?.avatar_url || "defaultprofile.png";
+
+        const esMiPublicacion =
+            publicacion.usuario_id === usuarioActualId;
 
         const post = document.createElement("div");
 
@@ -1314,7 +1374,17 @@ async function cargarPublicaciones(){
 
         post.innerHTML = `
             <div class="autor-post">
-                <h3>Publicación</h3>
+
+                <img
+                    class="avatar-post"
+                    alt="Foto de perfil"
+                >
+
+                <div>
+                    <h3 class="nombre-autor-post"></h3>
+                    <small class="usuario-autor-post"></small>
+                </div>
+
             </div>
 
             <p></p>
@@ -1326,6 +1396,17 @@ async function cargarPublicaciones(){
             </small>
 
         `;
+
+                post.dataset.id = publicacion.id;
+
+        post.querySelector(".avatar-post").src =
+            avatarAutor;
+
+        post.querySelector(".nombre-autor-post").textContent =
+            nombreAutor;
+
+        post.querySelector(".usuario-autor-post").textContent =
+            usuarioAutor ? `@${usuarioAutor.replace(/^@/, "")}` : "";
 
         post.querySelector("p").textContent =
         publicacion.contenido;
