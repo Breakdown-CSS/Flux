@@ -241,6 +241,69 @@ async function configurarComentarios(post, idPublicacion, usuarioId){
         elemento.querySelector("p").textContent =
             comentario.contenido;
 
+        // Mostrar eliminar solamente al autor
+        if(comentario.usuario_id === usuarioId){
+
+            const eliminarComentario =
+                document.createElement("button");
+
+            eliminarComentario.classList.add(
+                "eliminar-comentario"
+            );
+
+            eliminarComentario.textContent =
+                "🗑 Eliminar";
+
+            elemento.appendChild(eliminarComentario);
+
+            eliminarComentario.addEventListener(
+                "click",
+                async () => {
+
+                    const confirmar = confirm(
+                        "¿Quieres eliminar este comentario?"
+                    );
+
+                    if(!confirmar) return;
+
+                    eliminarComentario.disabled = true;
+
+                    const { data, error } =
+                        await supabaseClient
+                        .from("comentarios")
+                        .delete()
+                        .eq("id", comentario.id)
+                        .eq("usuario_id", usuarioId)
+                        .select("id");
+
+                    if(error || !data || data.length === 0){
+
+                        console.error(
+                            "Error al eliminar comentario:",
+                            error
+                        );
+
+                        alert(
+                            "No se pudo eliminar el comentario."
+                        );
+
+                        eliminarComentario.disabled = false;
+                        return;
+                    }
+
+                    // Quitar comentario de la pantalla
+                    elemento.remove();
+
+                    // Actualizar cantidad de comentarios
+                    cantidadComentarios--;
+
+                    actualizarContador();
+
+                }
+            );
+
+        }
+
         listaComentarios.appendChild(elemento);
 
     }
