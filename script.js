@@ -197,6 +197,181 @@ let cantidadPosts = 0;
 
 let postEditando = null;
 
+async function configurarComentarios(post, idPublicacion, usuarioId){
+
+    const comentarBtn = post.querySelector(".comentar-btn");
+    const comentarioInput = post.querySelector(".comentario-input");
+    const contadorComentario = post.querySelector(".contador-comentario");
+    const listaComentarios = post.querySelector(".lista-comentarios");
+    const toggleComentarios = post.querySelector(".toggle-comentarios");
+    const cajaComentarios = post.querySelector(".comentarios");
+
+    let cantidadComentarios = 0;
+
+    function actualizarContador(){
+
+        const accion = cajaComentarios.style.display === "none"
+            ? "Ver comentarios"
+            : "Ocultar comentarios";
+
+        toggleComentarios.textContent =
+            `💬 ${accion} (${cantidadComentarios})`;
+
+    }
+
+    function mostrarComentario(comentario, perfil){
+
+        const elemento = document.createElement("div");
+        elemento.classList.add("comentario");
+
+        elemento.innerHTML = `
+            <div class="autor-comentario">
+                <img class="avatar-comentario">
+                <strong></strong>
+            </div>
+            <p></p>
+        `;
+
+        elemento.querySelector("img").src =
+            perfil?.avatar_url || "defaultprofile.png";
+
+        elemento.querySelector("strong").textContent =
+            perfil?.nombre || "Usuario";
+
+        elemento.querySelector("p").textContent =
+            comentario.contenido;
+
+        listaComentarios.appendChild(elemento);
+
+    }
+
+    // Cargar comentarios desde Supabase
+    const { data: comentarios, error } =
+        await supabaseClient
+        .from("comentarios")
+        .select("id, usuario_id, contenido, creado_en")
+        .eq("publicacion_id", idPublicacion)
+        .order("creado_en", { ascending: true });
+
+    if(error){
+
+        console.error("Error al cargar comentarios:", error);
+
+    }else{
+
+        const idsAutores = [
+            ...new Set(comentarios.map(c => c.usuario_id))
+        ];
+
+        let perfiles = [];
+
+        if(idsAutores.length > 0){
+
+            const { data, error: errorPerfiles } =
+                await supabaseClient
+                .from("perfiles")
+                .select("id, nombre, avatar_url")
+                .in("id", idsAutores);
+
+            if(errorPerfiles){
+                console.error("Error al cargar autores:", errorPerfiles);
+            }else{
+                perfiles = data || [];
+            }
+
+        }
+
+        const mapaPerfiles = new Map(
+            perfiles.map(perfil => [perfil.id, perfil])
+        );
+
+        listaComentarios.innerHTML = "";
+
+        comentarios.forEach(comentario => {
+
+            mostrarComentario(
+                comentario,
+                mapaPerfiles.get(comentario.usuario_id)
+            );
+
+        });
+
+        cantidadComentarios = comentarios.length;
+        actualizarContador();
+
+    }
+
+    // Mostrar y ocultar comentarios
+    toggleComentarios.addEventListener("click", () => {
+
+        cajaComentarios.style.display =
+            cajaComentarios.style.display === "none"
+                ? "block"
+                : "none";
+
+        actualizarContador();
+
+    });
+
+    // Contador de caracteres
+    comentarioInput.addEventListener("input", () => {
+
+        const actual = comentarioInput.value.length;
+
+        contadorComentario.textContent =
+            `${actual} / 150`;
+
+        contadorComentario.style.color =
+            actual >= 150 ? "red" : "#666";
+
+    });
+
+    // Publicar comentario
+    comentarBtn.addEventListener("click", async () => {
+
+        const texto = comentarioInput.value.trim();
+
+        if(!texto || texto.length > 150) return;
+
+        comentarBtn.disabled = true;
+
+        const { data: nuevoComentario, error } =
+            await supabaseClient
+            .from("comentarios")
+            .insert({
+                publicacion_id: idPublicacion,
+                usuario_id: usuarioId,
+                contenido: texto
+            })
+            .select("id, usuario_id, contenido, creado_en")
+            .single();
+
+        comentarBtn.disabled = false;
+
+        if(error){
+
+            console.error("Error al comentar:", error);
+            alert("No se pudo guardar el comentario.");
+            return;
+
+        }
+
+        mostrarComentario(nuevoComentario, {
+            nombre: nombrePerfil.textContent,
+            avatar_url: avatar.src
+        });
+
+        cantidadComentarios++;
+        actualizarContador();
+
+        comentarioInput.value = "";
+        contadorComentario.textContent = "0 / 150";
+        contadorComentario.style.color = "#666";
+
+    });
+
+}
+
 async function configurarLikes(post, idPublicacion, usuarioId){
 
     const likeBtn = post.querySelector(".like-btn");
@@ -1051,129 +1226,15 @@ eliminarBtn.addEventListener("click", async () => {
 
 });
 
-    // Sistema de comentarios
+    // =========================
+    // COMENTARIOS CON SUPABASE
+    // =========================
 
-    const comentarBtn =
-    post.querySelector(".comentar-btn");
-
-    const comentarioInput =
-    post.querySelector(".comentario-input");
-
-    const contadorComentario =
-post.querySelector(".contador-comentario");
-
-const listaComentarios =
-post.querySelector(".lista-comentarios");
-
-comentarioInput.addEventListener("input", () => {
-
-    const max = 150;
-    const actual =
-    comentarioInput.value.length;
-
-    contadorComentario.textContent =
-    `${actual} / ${max}`;
-
-    if(actual >= max){
-
-        contadorComentario.style.color =
-        "red";
-
-    }else{
-
-        contadorComentario.style.color =
-        "#666";
-
-    }
-
-});
-
-const toggleComentarios =
-post.querySelector(".toggle-comentarios");
-
-const cajaComentarios =
-post.querySelector(".comentarios");
-
-toggleComentarios.addEventListener("click", () => {
-
-    if(cajaComentarios.style.display === "none"){
-
-        cajaComentarios.style.display = "block";
-
-        toggleComentarios.textContent =
-        `💬 Ocultar comentarios (${cantidadComentarios})`;
-
-    }else{
-
-        cajaComentarios.style.display = "none";
-
-        toggleComentarios.textContent =
-        `💬 Ver comentarios (${cantidadComentarios})`;
-
-    }
-
-});
-
-let cantidadComentarios = 0;
-
-    comentarBtn.addEventListener("click", () => {
-
-        if(comentarioInput.value.trim() === ""){
-            return;
-        }
-
-        const comentario =
-document.createElement("div");
-
-comentario.classList.add(
-    "comentario"
-);
-
-comentario.innerHTML = `
-
-<div class="autor-comentario">
-
-    <img
-    class="avatar-comentario"
-    src="${avatar.src}">
-
-    <strong>
-        ${nombrePerfil.textContent}
-    </strong>
-
-</div>
-
-<p>
-    ${comentarioInput.value}
-</p>
-
-`;
-
-        listaComentarios.appendChild(comentario);
-        
-        cantidadComentarios++;
-
-if(cajaComentarios.style.display === "none"){
-
-    toggleComentarios.textContent =
-    `💬 Ver comentarios (${cantidadComentarios})`;
-
-}else{
-
-    toggleComentarios.textContent =
-    `💬 Ocultar comentarios (${cantidadComentarios})`;
-
-}
-
-        comentarioInput.value = "";
-
-contadorComentario.textContent =
-"0 / 150";
-
-contadorComentario.style.color =
-"#666";
-
-    });
+    configurarComentarios(
+        post,
+        nuevaPublicacion.id,
+        user.id
+    );
 
 });
 
@@ -1696,6 +1757,12 @@ async function cargarPublicaciones(usuarioActualId){
     publicacion.id,
     usuarioActualId
 );
+
+        configurarComentarios(
+            post,
+            publicacion.id,
+            usuarioActualId
+        );
 
     });
 
