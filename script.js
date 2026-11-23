@@ -197,6 +197,110 @@ let cantidadPosts = 0;
 
 let postEditando = null;
 
+async function configurarLikes(post, idPublicacion, usuarioId){
+
+    const likeBtn = post.querySelector(".like-btn");
+    const likesTexto = post.querySelector(".likes");
+
+    if(!likeBtn || !likesTexto) return;
+
+    let dioLike = false;
+    let cantidadLikes = 0;
+
+    function actualizarLikes(){
+
+        likeBtn.textContent =
+            dioLike ? "❤️ Te gusta" : "👍 Like";
+
+        likesTexto.textContent =
+            `${cantidadLikes} Likes`;
+
+    }
+
+    likeBtn.disabled = true;
+
+    // Obtener Likes guardados en Supabase
+    const { data: likes, error } =
+        await supabaseClient
+        .from("likes_publicaciones")
+        .select("usuario_id")
+        .eq("publicacion_id", idPublicacion);
+
+    if(error){
+
+        console.error("Error al cargar Likes:", error);
+        likesTexto.textContent = "Error al cargar Likes";
+        return;
+
+    }
+
+    cantidadLikes = likes.length;
+
+    dioLike = likes.some(
+        like => like.usuario_id === usuarioId
+    );
+
+    actualizarLikes();
+
+    likeBtn.disabled = false;
+
+    // Dar o quitar Like
+    likeBtn.addEventListener("click", async () => {
+
+        likeBtn.disabled = true;
+
+        let errorOperacion;
+
+        if(dioLike){
+
+            const { error } =
+                await supabaseClient
+                .from("likes_publicaciones")
+                .delete()
+                .eq("publicacion_id", idPublicacion)
+                .eq("usuario_id", usuarioId);
+
+            errorOperacion = error;
+
+        }else{
+
+            const { error } =
+                await supabaseClient
+                .from("likes_publicaciones")
+                .insert({
+                    publicacion_id: idPublicacion,
+                    usuario_id: usuarioId
+                });
+
+            errorOperacion = error;
+
+        }
+
+        if(errorOperacion){
+
+            console.error(
+                "Error al modificar Like:",
+                errorOperacion
+            );
+
+            alert("No se pudo actualizar el Like.");
+
+        }else{
+
+            cantidadLikes += dioLike ? -1 : 1;
+
+            dioLike = !dioLike;
+
+            actualizarLikes();
+
+        }
+
+        likeBtn.disabled = false;
+
+    });
+
+}
+
 contenido.addEventListener("input", () => {
 
     const max = 280;
@@ -899,41 +1003,11 @@ editarBtn.addEventListener("click", () => {
 const eliminarBtn =
 post.querySelector(".eliminar-post");
 
-    const likeBtn =
-    post.querySelector(".like-btn");
-
-    const likesTexto =
-    post.querySelector(".likes");
-
-  let likes = 0;
-let dioLike = false;
-
-likeBtn.addEventListener("click", () => {
-
-    if(dioLike){
-
-        likes--;
-
-        dioLike = false;
-
-        likeBtn.textContent =
-        "👍 Like";
-
-    }else{
-
-        likes++;
-
-        dioLike = true;
-
-        likeBtn.textContent =
-        "❤️ Te gusta";
-
-    }
-
-    likesTexto.textContent =
-    `${likes} Likes`;
-
-});
+configurarLikes(
+    post,
+    nuevaPublicacion.id,
+    user.id
+);
 
 eliminarBtn.addEventListener("click", async () => {
 
@@ -1616,6 +1690,12 @@ async function cargarPublicaciones(usuarioActualId){
         }
 
         feed.appendChild(post);
+
+        configurarLikes(
+    post,
+    publicacion.id,
+    usuarioActualId
+);
 
     });
 
