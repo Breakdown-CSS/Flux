@@ -626,30 +626,240 @@ html{
 
 }
 
-#perfilCompletoAvatar {
-    width: 240px;
-    height: 240px;
-    object-fit: cover;
-    border-radius: 50%;
-    display: block;
+/* =========================
+   NUEVO DISEÑO DEL PERFIL
+========================= */
+
+.flux-perfil-contenedor{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    padding:0 0 30px;
 }
 
-#perfilCompleto .perfil {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    box-sizing: border-box;
+/* BOTÓN REGRESAR */
+
+#volverInicio{
+    background:transparent;
+    color:#1877f2;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:18px;
+    padding:10px 0;
+    box-shadow:none;
 }
 
-#perfilCompletoAvatar {
-    margin: 0 auto 15px;
+/* TARJETA PRINCIPAL */
+
+.flux-perfil-cabecera{
+    background:white;
+    border:1px solid #e4e7ec;
+    border-radius:22px;
+    padding:30px;
+    margin-bottom:20px;
 }
 
-#perfilCompletoBio {
-    max-width: 100%;
-    width: 100%;
-    overflow-wrap: anywhere;
-    box-sizing: border-box;
+/* IDENTIDAD DEL USUARIO */
+
+.flux-perfil-identidad{
+    display:flex;
+    align-items:center;
+    gap:24px;
+}
+
+#perfilCompletoAvatar{
+    width:110px;
+    height:110px;
+    flex-shrink:0;
+    object-fit:cover;
+    border-radius:26px;
+    margin:0;
+}
+
+.flux-perfil-datos{
+    flex:1;
+    min-width:0;
+    overflow-wrap:anywhere;
+}
+
+.flux-perfil-datos .nombre-con-insignia{
+    justify-content:flex-start;
+}
+
+#perfilCompletoNombre{
+    font-size:28px;
+    font-weight:700;
+    margin:0;
+}
+
+#perfilCompletoUsuario{
+    color:#777e89;
+    font-size:15px;
+    margin:6px 0;
+}
+
+.flux-perfil-etiqueta{
+    color:#1877f2;
+    font-size:12px;
+    font-weight:600;
+    margin:8px 0 0;
+}
+
+/* BIOGRAFÍA */
+
+.flux-perfil-presentacion{
+    margin-top:26px;
+}
+
+.flux-perfil-presentacion h3{
+    font-size:14px;
+    margin:0 0 10px;
+}
+
+#perfilCompletoBio{
+    font-size:15px;
+    line-height:1.7;
+    margin:0;
+    overflow-wrap:anywhere;
+    white-space:pre-wrap;
+}
+
+/* ESTADÍSTICAS */
+
+.flux-perfil-estadisticas{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:24px;
+}
+
+.flux-estadistica{
+    background:#f5f7fa;
+    padding:14px 20px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:600;
+}
+
+/* CONTENIDO DEL PERFIL */
+
+.flux-perfil-contenido{
+    background:white;
+    border:1px solid #e4e7ec;
+    border-radius:22px;
+    padding:24px;
+}
+
+.flux-perfil-contenido > h3{
+    font-size:18px;
+    margin:0 0 18px;
+}
+
+/* PESTAÑAS */
+
+.flux-perfil-pestanas{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+    padding:6px;
+    background:#f0f2f5;
+    border-radius:14px;
+}
+
+.flux-pestana{
+    background:transparent;
+    color:#68707c;
+    font-family:inherit;
+    font-weight:600;
+    font-size:13px;
+    border-radius:10px;
+    margin:0;
+    padding:12px 6px;
+}
+
+.flux-pestana:hover{
+    background:#e5e9ef;
+    transform:none;
+}
+
+.flux-pestana.activa{
+    background:white;
+    color:#1877f2;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+
+.flux-panel{
+    min-width:0;
+    margin-top:20px;
+}
+
+/* MODO OSCURO */
+
+.dark-mode .flux-perfil-cabecera,
+.dark-mode .flux-perfil-contenido{
+    background:#242526;
+    border-color:#38393b;
+}
+
+.dark-mode .flux-estadistica,
+.dark-mode .flux-perfil-pestanas{
+    background:#18191a;
+}
+
+.dark-mode .flux-pestana{
+    color:#b0b3b8;
+    box-shadow:none;
+}
+
+.dark-mode .flux-pestana:hover{
+    background:#303133;
+}
+
+.dark-mode .flux-pestana.activa{
+    background:#38393b;
+    color:#4da3ff;
+}
+
+.dark-mode #perfilCompletoUsuario{
+    color:#b0b3b8;
+}
+
+.dark-mode #volverInicio,
+.dark-mode .flux-perfil-etiqueta{
+    color:#4da3ff;
+}
+
+/* ADAPTACIÓN A CELULARES */
+
+@media(max-width:600px){
+
+    .flux-perfil-cabecera{
+        padding:20px;
+        border-radius:18px;
+    }
+
+    .flux-perfil-identidad{
+        gap:16px;
+    }
+
+    #perfilCompletoAvatar{
+        width:80px;
+        height:80px;
+        border-radius:20px;
+    }
+
+    #perfilCompletoNombre{
+        font-size:22px;
+    }
+
+    .flux-perfil-contenido{
+        padding:14px;
+        border-radius:18px;
+    }
+
+    .flux-pestana{
+        font-size:11px;
+        padding:10px 3px;
+    }
+
 }
