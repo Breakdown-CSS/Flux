@@ -253,48 +253,118 @@ placeholder="¿Qué estás pensando?">
 
 <section id="perfilCompleto" style="display:none;">
 
-    <button id="volverInicio">
-        ← Volver al inicio
-    </button>
+    <div class="flux-perfil-contenedor">
 
-    <div class="perfil">
-        <img
-            id="perfilCompletoAvatar"
-            src="defaultprofile.png"
-            alt="Foto de perfil">
+        <button id="volverInicio">
+            ← Volver al inicio
+        </button>
 
-<div class="nombre-con-insignia">
+        <div class="flux-perfil-cabecera">
 
-    <h2 id="perfilCompletoNombre">
-        Usuario
-    </h2>
+            <div class="flux-perfil-identidad">
 
-    <img
-        id="insigniaVerificadaCompleta"
-        src="verificationbadge.png"
-        alt="Verificado">
+                <img
+                    id="perfilCompletoAvatar"
+                    src="defaultprofile.png"
+                    alt="Foto de perfil">
 
-</div>
+                <div class="flux-perfil-datos">
 
-        <p id="perfilCompletoUsuario">
-            @usuario
-        </p>
+                    <div class="nombre-con-insignia">
 
-        <p id="perfilCompletoBio">
-            Sin biografía.
-        </p>
+                        <h2 id="perfilCompletoNombre">
+                            Usuario
+                        </h2>
 
-        <p id="perfilCompletoContador">
-            Publicaciones: 0
-        </p>
+                        <img
+                            id="insigniaVerificadaCompleta"
+                            src="verificationbadge.png"
+                            alt="Verificado">
 
-<section id="perfilCompletoPosts">
+                    </div>
+
+                    <p id="perfilCompletoUsuario">
+                        @usuario
+                    </p>
+
+                    <p class="flux-perfil-etiqueta">
+                        Mi espacio en Flux
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="flux-perfil-presentacion">
+
+                <h3>Sobre mí</h3>
+
+                <p id="perfilCompletoBio">
+                    Sin biografía.
+                </p>
+
+            </div>
+
+            <div class="flux-perfil-estadisticas">
+
+                <div class="flux-estadistica">
+                    <span id="perfilCompletoContador">
+                        Publicaciones: 0
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="flux-perfil-contenido">
+
+            <h3>Explorar mi perfil</h3>
+
+            <div class="flux-perfil-pestanas">
+
+                <button
+                    class="flux-pestana activa"
+                    data-seccion="publicaciones">
+                    Publicaciones
+                </button>
+
+                <button
+                    class="flux-pestana"
+                    data-seccion="actividad">
+                    Actividad
+                </button>
+
+                <button
+                    class="flux-pestana"
+                    data-seccion="interacciones">
+                    Interacciones
+                </button>
+
+            </div>
+
+            <div
+                id="perfilCompletoPosts"
+                class="flux-panel">
+            </div>
+
+            <div
+                id="perfilActividad"
+                class="flux-panel"
+                style="display:none;">
+            </div>
+
+            <div
+                id="perfilInteracciones"
+                class="flux-panel"
+                style="display:none;">
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
-
-</div> <!-- cierre del div perfil completo -->
-
-</section> <!-- cierre de perfilCompleto -->
 
 </main>
 
