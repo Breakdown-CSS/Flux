@@ -1414,6 +1414,12 @@ function cambiarPestanaPerfil(seccion){
 
     }
 
+        if(seccion === "interacciones"){
+
+        cargarInteraccionesPerfil();
+
+    }
+
 }
 
 pestanasPerfil.forEach(pestana => {
@@ -2298,5 +2304,93 @@ async function cargarActividadPerfil(){
         panel.appendChild(elemento);
 
     });
+
+}
+
+// =========================
+// CARGAR INTERACCIONES DEL PERFIL
+// =========================
+
+async function cargarInteraccionesPerfil(){
+
+    const panel =
+        document.getElementById("perfilInteracciones");
+
+    panel.textContent =
+        "Cargando interacciones...";
+
+    // Obtener usuario actual
+
+    const { data: { user }, error: errorUsuario } =
+        await supabaseClient.auth.getUser();
+
+    if(errorUsuario || !user){
+
+        panel.textContent =
+            "No se pudo identificar al usuario.";
+
+        return;
+
+    }
+
+    // Obtener Likes realizados
+
+    const { data: likes, error: errorLikes } =
+        await supabaseClient
+        .from("likes_publicaciones")
+        .select("publicacion_id")
+        .eq("usuario_id", user.id);
+
+    // Obtener comentarios realizados
+
+    const { data: comentarios, error: errorComentarios } =
+        await supabaseClient
+        .from("comentarios")
+        .select("contenido, creado_en")
+        .eq("usuario_id", user.id)
+        .order("creado_en", { ascending: false });
+
+    if(errorLikes || errorComentarios){
+
+        console.error(
+            errorLikes || errorComentarios
+        );
+
+        panel.textContent =
+            "No se pudieron cargar las interacciones.";
+
+        return;
+
+    }
+
+    // Mostrar estadísticas
+
+    panel.innerHTML = `
+
+        <div class="flux-interacciones-resumen">
+
+            <div class="flux-interaccion-tarjeta">
+
+                <span>❤️</span>
+
+                <strong>${likes.length}</strong>
+
+                <small>Likes realizados</small>
+
+            </div>
+
+            <div class="flux-interaccion-tarjeta">
+
+                <span>💬</span>
+
+                <strong>${comentarios.length}</strong>
+
+                <small>Comentarios realizados</small>
+
+            </div>
+
+        </div>
+
+    `;
 
 }

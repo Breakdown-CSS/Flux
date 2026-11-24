@@ -927,3 +927,67 @@ html{
 .dark-mode .flux-actividad-datos small{
     color:#b0b3b8;
 }
+
+/* =========================
+   INTERACCIONES DEL PERFIL
+========================= */
+
+.flux-interacciones-resumen{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:16px;
+    margin-bottom:24px;
+}
+
+.flux-interaccion-tarjeta{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    background:#f5f7fa;
+    border:1px solid #e4e7ec;
+    border-radius:16px;
+    padding:20px;
+}
+
+.flux-interaccion-tarjeta span{
+    font-size:24px;
+}
+
+.flux-interaccion-tarjeta strong{
+    font-size:30px;
+}
+
+.flux-interaccion-tarjeta small{
+    font-size:13px;
+    color:#777e89;
+}
+
+/* MODO OSCURO */
+
+.dark-mode .flux-interaccion-tarjeta{
+    background:#242526;
+    border-color:#38393b;
+}
+
+.dark-mode .flux-interaccion-tarjeta small{
+    color:#b0b3b8;
+}
+
+/* DISPOSITIVOS MÓVILES */
+
+@media(max-width:600px){
+
+    .flux-interacciones-resumen{
+        gap:10px;
+    }
+
+    .flux-interaccion-tarjeta{
+        padding:14px;
+    }
+
+    .flux-interaccion-tarjeta strong{
+        font-size:24px;
+    }
+
+}
