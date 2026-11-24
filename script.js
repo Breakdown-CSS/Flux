@@ -1400,6 +1400,7 @@ function cambiarPestanaPerfil(seccion){
 
     }
 
+
     // Mostrar el panel seleccionado
     if(panelesPerfil[seccion]){
 
@@ -1407,11 +1408,11 @@ function cambiarPestanaPerfil(seccion){
 
     }
 
-}
+    if(seccion === "actividad"){
 
-if(seccion === "actividad"){
+        cargarActividadPerfil();
 
-    cargarActividadPerfil();
+    }
 
 }
 
