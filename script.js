@@ -1349,6 +1349,86 @@ volverInicio.addEventListener("click", () => {
 
 });
 
+
+// =========================
+// PESTAÑAS DEL PERFIL
+// =========================
+
+const pestanasPerfil =
+    document.querySelectorAll(".flux-pestana");
+
+const panelesPerfil = {
+
+    publicaciones:
+        document.getElementById("perfilCompletoPosts"),
+
+    actividad:
+        document.getElementById("perfilActividad"),
+
+    interacciones:
+        document.getElementById("perfilInteracciones")
+
+};
+
+function cambiarPestanaPerfil(seccion){
+
+    // Desactivar todas las pestañas
+    pestanasPerfil.forEach(pestana => {
+
+        pestana.classList.remove("activa");
+
+    });
+
+    // Ocultar todos los paneles
+    Object.values(panelesPerfil).forEach(panel => {
+
+        panel.style.display = "none";
+
+    });
+
+    // Activar la pestaña seleccionada
+    const pestanaActiva = document.querySelector(
+        `.flux-pestana[data-seccion="${seccion}"]`
+    );
+
+    if(pestanaActiva){
+
+        pestanaActiva.classList.add("activa");
+
+    }
+
+    // Mostrar el panel seleccionado
+    if(panelesPerfil[seccion]){
+
+        panelesPerfil[seccion].style.display = "block";
+
+    }
+
+}
+
+pestanasPerfil.forEach(pestana => {
+
+    pestana.addEventListener("click", () => {
+
+        cambiarPestanaPerfil(
+            pestana.dataset.seccion
+        );
+
+    });
+
+});
+
+// Mensajes temporales de los paneles
+
+panelesPerfil.publicaciones.textContent =
+    "Aquí aparecerán tus publicaciones.";
+
+panelesPerfil.actividad.textContent =
+    "Aquí aparecerá tu actividad reciente.";
+
+panelesPerfil.interacciones.textContent =
+    "Aquí aparecerán tus Likes y comentarios.";
+
 setTimeout(() => {
     const pantallaCarga =
     document.getElementById("pantallaCarga");
