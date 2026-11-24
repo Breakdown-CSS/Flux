@@ -1409,6 +1409,12 @@ function cambiarPestanaPerfil(seccion){
 
 }
 
+if(seccion === "actividad"){
+
+    cargarActividadPerfil();
+
+}
+
 pestanasPerfil.forEach(pestana => {
 
     pestana.addEventListener("click", () => {
@@ -1427,7 +1433,7 @@ panelesPerfil.publicaciones.textContent =
     "Aquí aparecerán tus publicaciones.";
 
 panelesPerfil.actividad.textContent =
-    "Aquí aparecerá tu actividad reciente.";
+    "Cargando actividad...";
 
 panelesPerfil.interacciones.textContent =
     "Aquí aparecerán tus Likes y comentarios.";
@@ -2150,3 +2156,146 @@ btnCerrarSesion.addEventListener("click", async () => {
 
 });
 
+// =========================
+// CARGAR ACTIVIDAD DEL PERFIL
+// =========================
+
+async function cargarActividadPerfil(){
+
+    const panel =
+        document.getElementById("perfilActividad");
+
+    panel.textContent = "Cargando actividad...";
+
+    const { data: { user }, error: errorUsuario } =
+        await supabaseClient.auth.getUser();
+
+    if(errorUsuario || !user){
+
+        panel.textContent =
+            "No se pudo identificar al usuario.";
+
+        return;
+
+    }
+
+    // Obtener publicaciones del usuario
+
+    const { data: publicaciones, error: errorPosts } =
+        await supabaseClient
+        .from("publicaciones")
+        .select("contenido, creado_en")
+        .eq("usuario_id", user.id);
+
+    // Obtener comentarios del usuario
+
+    const { data: comentarios, error: errorComentarios } =
+        await supabaseClient
+        .from("comentarios")
+        .select("contenido, creado_en")
+        .eq("usuario_id", user.id);
+
+    if(errorPosts || errorComentarios){
+
+        console.error(
+            errorPosts || errorComentarios
+        );
+
+        panel.textContent =
+            "No se pudo cargar la actividad.";
+
+        return;
+
+    }
+
+    // Combinar las actividades
+
+    const actividades = [
+
+        ...publicaciones.map(publicacion => ({
+
+            tipo: "publicacion",
+            contenido: publicacion.contenido,
+            fecha: publicacion.creado_en
+
+        })),
+
+        ...comentarios.map(comentario => ({
+
+            tipo: "comentario",
+            contenido: comentario.contenido,
+            fecha: comentario.creado_en
+
+        }))
+
+    ];
+
+    // Ordenar desde la más reciente
+
+    actividades.sort((a, b) =>
+
+        new Date(b.fecha) - new Date(a.fecha)
+
+    );
+
+    panel.innerHTML = "";
+
+    if(actividades.length === 0){
+
+        panel.textContent =
+            "Todavía no tienes actividad reciente.";
+
+        return;
+
+    }
+
+    // Mostrar las actividades
+
+    actividades.forEach(actividad => {
+
+        const elemento =
+            document.createElement("div");
+
+        elemento.classList.add(
+            "flux-actividad-item"
+        );
+
+        elemento.innerHTML = `
+            <div class="flux-actividad-icono"></div>
+
+            <div class="flux-actividad-datos">
+
+                <strong></strong>
+
+                <p></p>
+
+                <small></small>
+
+            </div>
+        `;
+
+        elemento.querySelector(
+            ".flux-actividad-icono"
+        ).textContent =
+            actividad.tipo === "publicacion"
+            ? "📝"
+            : "💬";
+
+        elemento.querySelector("strong").textContent =
+            actividad.tipo === "publicacion"
+            ? "Creaste una publicación"
+            : "Comentaste una publicación";
+
+        elemento.querySelector("p").textContent =
+            actividad.contenido;
+
+        elemento.querySelector("small").textContent =
+            obtenerTiempoRelativo(
+                new Date(actividad.fecha)
+            );
+
+        panel.appendChild(elemento);
+
+    });
+
+}

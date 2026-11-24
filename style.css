@@ -863,3 +863,67 @@ html{
     }
 
 }
+
+/* =========================
+   ACTIVIDAD DEL PERFIL
+========================= */
+
+.flux-actividad-item{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    padding:18px 0;
+    border-bottom:1px solid #e4e7ec;
+}
+
+.flux-actividad-item:last-child{
+    border-bottom:none;
+}
+
+.flux-actividad-icono{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    flex-shrink:0;
+    background:#f0f5ff;
+    border-radius:12px;
+    font-size:20px;
+}
+
+.flux-actividad-datos{
+    flex:1;
+    min-width:0;
+    overflow-wrap:anywhere;
+}
+
+.flux-actividad-datos strong{
+    font-size:14px;
+}
+
+.flux-actividad-datos p{
+    font-size:14px;
+    line-height:1.6;
+    margin:8px 0;
+    white-space:pre-wrap;
+}
+
+.flux-actividad-datos small{
+    color:#777e89;
+    font-size:12px;
+}
+
+/* MODO OSCURO */
+
+.dark-mode .flux-actividad-item{
+    border-color:#38393b;
+}
+
+.dark-mode .flux-actividad-icono{
+    background:#303b4d;
+}
+
+.dark-mode .flux-actividad-datos small{
+    color:#b0b3b8;
+}
