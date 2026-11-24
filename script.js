@@ -2393,4 +2393,233 @@ async function cargarInteraccionesPerfil(){
 
     `;
 
+    // =========================
+    // PUBLICACIONES QUE TE GUSTAN
+    // =========================
+
+    const tituloLikes =
+        document.createElement("h3");
+
+    tituloLikes.classList.add(
+        "flux-interacciones-titulo"
+    );
+
+    tituloLikes.textContent =
+        "Publicaciones que te gustan";
+
+    panel.appendChild(tituloLikes);
+
+    if(likes.length === 0){
+
+        const mensaje =
+            document.createElement("p");
+
+        mensaje.textContent =
+            "Todavía no has dado Like a ninguna publicación.";
+
+        panel.appendChild(mensaje);
+
+    }else{
+
+        const idsPublicaciones =
+            likes.map(like => like.publicacion_id);
+
+        const { data: publicaciones, error: errorPosts } =
+            await supabaseClient
+            .from("publicaciones")
+            .select("id, usuario_id, contenido, creado_en")
+            .in("id", idsPublicaciones)
+            .order("creado_en", { ascending: false });
+
+        if(errorPosts){
+
+            console.error(errorPosts);
+
+            const mensaje =
+                document.createElement("p");
+
+            mensaje.textContent =
+                "No se pudieron cargar las publicaciones.";
+
+            panel.appendChild(mensaje);
+
+        }else if(publicaciones.length === 0){
+
+            const mensaje =
+                document.createElement("p");
+
+            mensaje.textContent =
+                "No hay publicaciones disponibles.";
+
+            panel.appendChild(mensaje);
+
+        }else{
+
+            // Obtener autores
+
+            const idsAutores = [
+                ...new Set(
+                    publicaciones.map(
+                        post => post.usuario_id
+                    )
+                )
+            ];
+
+            const { data: perfiles, error: errorPerfiles } =
+                await supabaseClient
+                .from("perfiles")
+                .select("id, nombre, usuario, avatar_url")
+                .in("id", idsAutores);
+
+            if(errorPerfiles){
+
+                console.error(errorPerfiles);
+
+            }
+
+            const mapaPerfiles = new Map(
+                (perfiles || []).map(
+                    perfil => [perfil.id, perfil]
+                )
+            );
+
+            // Mostrar publicaciones
+
+            publicaciones.forEach(publicacion => {
+
+                const autor =
+                    mapaPerfiles.get(
+                        publicacion.usuario_id
+                    );
+
+                const tarjeta =
+                    document.createElement("div");
+
+                tarjeta.classList.add(
+                    "flux-interaccion-post"
+                );
+
+                tarjeta.innerHTML = `
+
+                    <div class="flux-interaccion-autor">
+
+                        <img alt="Foto de perfil">
+
+                        <div>
+
+                            <strong></strong>
+
+                            <small></small>
+
+                        </div>
+
+                        <span class="flux-interaccion-corazon">
+                            ❤️
+                        </span>
+
+                    </div>
+
+                    <p></p>
+
+                    <small class="flux-interaccion-fecha"></small>
+
+                `;
+
+                tarjeta.querySelector("img").src =
+                    autor?.avatar_url ||
+                    "defaultprofile.png";
+
+                tarjeta.querySelector("strong").textContent =
+                    autor?.nombre || "Usuario";
+
+                tarjeta.querySelector(
+                    ".flux-interaccion-autor small"
+                ).textContent =
+                    autor?.usuario
+                    ? "@" + autor.usuario
+                    : "";
+
+                tarjeta.querySelector("p").textContent =
+                    publicacion.contenido;
+
+                tarjeta.querySelector(
+                    ".flux-interaccion-fecha"
+                ).textContent =
+                    obtenerTiempoRelativo(
+                        new Date(publicacion.creado_en)
+                    );
+
+                panel.appendChild(tarjeta);
+
+            });
+
+        }
+
+    }
+
+    // =========================
+    // MIS COMENTARIOS
+    // =========================
+
+    const tituloComentarios =
+        document.createElement("h3");
+
+    tituloComentarios.classList.add(
+        "flux-interacciones-titulo"
+    );
+
+    tituloComentarios.textContent =
+        "Mis comentarios";
+
+    panel.appendChild(tituloComentarios);
+
+    if(comentarios.length === 0){
+
+        const mensaje =
+            document.createElement("p");
+
+        mensaje.textContent =
+            "Todavía no has realizado comentarios.";
+
+        panel.appendChild(mensaje);
+
+    }else{
+
+        comentarios.forEach(comentario => {
+
+            const tarjeta =
+                document.createElement("div");
+
+            tarjeta.classList.add(
+                "flux-interaccion-post"
+            );
+
+            tarjeta.innerHTML = `
+
+                <strong>
+                    💬 Comentario realizado
+                </strong>
+
+                <p></p>
+
+                <small class="flux-interaccion-fecha"></small>
+
+            `;
+
+            tarjeta.querySelector("p").textContent =
+                comentario.contenido;
+
+            tarjeta.querySelector(
+                ".flux-interaccion-fecha"
+            ).textContent =
+                obtenerTiempoRelativo(
+                    new Date(comentario.creado_en)
+                );
+
+            panel.appendChild(tarjeta);
+
+        });
+
+    }
+
 }
