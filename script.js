@@ -1314,7 +1314,7 @@ window.addEventListener("load", () => {
 
 });
 
-abrirPerfil.addEventListener("click", () => {
+abrirPerfil.addEventListener("click", async () => {
 
     perfilCompletoAvatar.src =
     avatar.src;
@@ -1328,14 +1328,17 @@ abrirPerfil.addEventListener("click", () => {
     perfilCompletoBio.textContent =
     biografiaPerfil.textContent;
 
-    perfilCompletoContador.textContent =
-    contadorPosts.textContent;
-
     document.querySelector(
         ".contenedor-principal"
     ).style.display = "none";
 
     perfilCompleto.style.display = "block";
+
+    cambiarPestanaPerfil("publicaciones");
+
+    window.scrollTo(0, 0);
+
+    await cargarPublicacionesPerfil();
 
 });
 
@@ -1428,6 +1431,188 @@ panelesPerfil.actividad.textContent =
 
 panelesPerfil.interacciones.textContent =
     "Aquí aparecerán tus Likes y comentarios.";
+    
+// =========================
+// CARGAR PUBLICACIONES DEL PERFIL
+// =========================
+
+async function cargarPublicacionesPerfil(){
+
+    perfilCompletoPosts.textContent =
+        "Cargando publicaciones...";
+
+    perfilCompletoContador.textContent =
+        "Publicaciones: ...";
+
+    // Obtener usuario actual
+
+    const { data: { user }, error: errorUsuario } =
+        await supabaseClient.auth.getUser();
+
+    if(errorUsuario || !user){
+
+        perfilCompletoPosts.textContent =
+            "No se pudo identificar al usuario.";
+
+        return;
+
+    }
+
+    // Obtener únicamente sus publicaciones
+
+    const { data: publicaciones, error } =
+        await supabaseClient
+        .from("publicaciones")
+        .select("*")
+        .eq("usuario_id", user.id)
+        .order("creado_en", { ascending: false });
+
+    if(error){
+
+        console.error(
+            "Error al cargar publicaciones del perfil:",
+            error
+        );
+
+        perfilCompletoPosts.textContent =
+            "No se pudieron cargar las publicaciones.";
+
+        return;
+
+    }
+
+    // Actualizar contador del perfil
+
+    perfilCompletoContador.textContent =
+        `Publicaciones: ${publicaciones.length}`;
+
+    // Limpiar panel
+
+    perfilCompletoPosts.innerHTML = "";
+
+    // Comprobar si existen publicaciones
+
+    if(publicaciones.length === 0){
+
+        perfilCompletoPosts.textContent =
+            "Todavía no has creado publicaciones.";
+
+        return;
+
+    }
+
+    // Mostrar publicaciones
+
+    publicaciones.forEach(publicacion => {
+
+        const post = document.createElement("div");
+
+        post.classList.add("post");
+
+        post.dataset.id = publicacion.id;
+
+        post.innerHTML = `
+            <div class="autor-post">
+
+                <img
+                    class="avatar-post"
+                    alt="Foto de perfil">
+
+                <div>
+
+                    <h3 class="nombre-autor-post"></h3>
+
+                    <small class="usuario-autor-post"></small>
+
+                </div>
+
+            </div>
+
+            <p></p>
+
+            <small class="fecha-post"></small>
+
+            <hr>
+
+            <button class="like-btn">
+                👍 Like
+            </button>
+
+            <span class="likes">
+                0 Likes
+            </span>
+
+            <button class="toggle-comentarios">
+                💬 Ver comentarios (0)
+            </button>
+
+            <div class="comentarios" style="display:none;">
+
+                <input
+                    type="text"
+                    class="comentario-input"
+                    maxlength="150"
+                    placeholder="Escribe un comentario">
+
+                <div class="contador-comentario">
+                    0 / 150
+                </div>
+
+                <button class="comentar-btn">
+                    Comentar
+                </button>
+
+                <div class="lista-comentarios"></div>
+
+            </div>
+        `;
+
+        // Datos del autor
+
+        post.querySelector(".avatar-post").src =
+            avatar.src;
+
+        post.querySelector(".nombre-autor-post").textContent =
+            nombrePerfil.textContent;
+
+        post.querySelector(".usuario-autor-post").textContent =
+            usuarioPerfil.textContent;
+
+        // Contenido de la publicación
+
+        post.querySelector("p").textContent =
+            publicacion.contenido;
+
+        // Fecha de publicación
+
+        post.querySelector(".fecha-post").textContent =
+            obtenerTiempoRelativo(
+                new Date(publicacion.creado_en)
+            );
+
+        // Agregar publicación al perfil
+
+        perfilCompletoPosts.appendChild(post);
+
+        // Activar Likes
+
+        configurarLikes(
+            post,
+            publicacion.id,
+            user.id
+        );
+
+        // Activar comentarios
+
+        configurarComentarios(
+            post,
+            publicacion.id,
+            user.id
+        );
+
+    });
+
+}
 
 setTimeout(() => {
     const pantallaCarga =
